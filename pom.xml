@@ -59,6 +59,9 @@
                             ${basedir}/src/main/resources/wsdl/engine/CentralControl.wsdl
                         </wsdlFile>
                     </wsdlFiles>
+                    <args>
+                        <arg>-Xendorsed</arg>
+                    </args>
                 </configuration>
 
                 <!-- if you want to use a specific version of JAX-WS, you can do so like this -->
@@ -69,19 +72,6 @@
                         <version>2.2.10</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-
-            <!-- Don't forget to use endorsed with JAX-WS 2.2 on Java 6 !! -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArguments>
-                        <endorseddirs>build/generated/CentralControl</endorseddirs>
-                    </compilerArguments>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -94,8 +84,8 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>build/generated/CentralControl</outputDirectory>
-                            <silent>true</silent>
+                            <outputDirectory>${basedir}/build/generated/CentralControl</outputDirectory>
+
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>javax.xml.bind</groupId>
@@ -114,6 +104,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>build</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>build/generated/CentralControl</directory>
+            </resource>
+        </resources>
     </build>
 </project>
