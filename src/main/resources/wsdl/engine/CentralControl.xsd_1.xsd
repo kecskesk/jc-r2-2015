@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.10 svn-revision#919b322c92f13ad085a933e8dd6dd35d4947364b. --><xs:schema xmlns:tns="http://www.loxon.eu/CentralControl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://www.loxon.eu/CentralControl/">
+
+<xs:import schemaLocation="http://javachallenge.loxon.hu:8443/engine/CentralControl?xsd=2"/>
+
+<xs:element name="actionCostRequest">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="actionCostResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="drill" type="xs:int"/>
+<xs:element name="move" type="xs:int"/>
+<xs:element name="radar" type="xs:int"/>
+<xs:element name="explode" type="xs:int"/>
+<xs:element name="watch" type="xs:int"/>
+<xs:element name="availableActionPoints" type="xs:int"/>
+<xs:element name="availableExplosives" type="xs:int"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="explodeCellRequest">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="unit" type="xs:int"/>
+<xs:element name="direction" type="tns:wsDirection"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="explodeCellResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="getSpaceShuttleExitPosRequest">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="getSpaceShuttleExitPosResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="cord" type="tns:wsCoordinate"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="getSpaceShuttlePosRequest">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="getSpaceShuttlePosResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="cord" type="tns:wsCoordinate"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="isMyTurnRequest">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="isMyTurnResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="isYourTurn" type="xs:boolean"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="moveBuilderUnitRequest">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="unit" type="xs:int"/>
+<xs:element name="direction" type="tns:wsDirection"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="moveBuilderUnitResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="radarRequest">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="unit" type="xs:int"/>
+<xs:element name="cord" type="tns:wsCoordinate" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="radarResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="scout" type="tns:scouting" maxOccurs="unbounded"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="startGameRequest">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="startGameResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="size" type="tns:wsCoordinate"/>
+<xs:element name="result" type="tns:commonResp"/>
+<xs:element name="units" type="tns:wsBuilderunit" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="structureTunnelRequest">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="unit" type="xs:int"/>
+<xs:element name="direction" type="tns:wsDirection"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="structureTunnelResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="watchRequest">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="unit" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="watchResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="scout" type="tns:scouting" maxOccurs="unbounded"/>
+<xs:element name="result" type="tns:commonResp"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:complexType name="commonResp">
+<xs:sequence>
+<xs:element name="actionPointsLeft" type="xs:int"/>
+<xs:element name="explosivesLeft" type="xs:int"/>
+<xs:element name="turnsLeft" type="xs:int"/>
+<xs:element name="type" type="tns:resultType"/>
+<xs:element name="builderUnit" type="xs:int"/>
+<xs:element name="message" type="xs:string"/>
+<xs:element name="code" type="xs:string"/>
+<xs:element name="score" type="tns:wsScore"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="wsScore">
+<xs:sequence>
+<xs:element name="reward" type="xs:long"/>
+<xs:element name="bonus" type="xs:long"/>
+<xs:element name="penalty" type="xs:long"/>
+<xs:element name="total" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="scouting">
+<xs:sequence>
+<xs:element name="cord" type="tns:wsCoordinate"/>
+<xs:element name="object" type="tns:objectType"/>
+<xs:element name="team" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="wsCoordinate">
+<xs:sequence>
+<xs:element name="x" type="xs:int"/>
+<xs:element name="y" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="wsBuilderunit">
+<xs:sequence>
+<xs:element name="cord" type="tns:wsCoordinate"/>
+<xs:element name="unitid" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="resultType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="DONE"/>
+<xs:enumeration value="INVALID"/>
+<xs:enumeration value="ERROR"/>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="objectType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Tunnel"/>
+<xs:enumeration value="Shuttle"/>
+<xs:enumeration value="BuilderUnit"/>
+<xs:enumeration value="Rock"/>
+<xs:enumeration value="Granite"/>
+<xs:enumeration value="Obsidian"/>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="wsDirection">
+<xs:restriction base="xs:string">
+<xs:enumeration value="UP"/>
+<xs:enumeration value="DOWN"/>
+<xs:enumeration value="LEFT"/>
+<xs:enumeration value="RIGHT"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

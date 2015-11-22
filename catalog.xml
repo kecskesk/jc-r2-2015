@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://javachallenge.loxon.hu:8443/engine/CentralControl?wsdl" uri="src/main/resources/wsdl/engine/CentralControl.wsdl"/>
+    <system systemId="http://javachallenge.loxon.hu:8443/engine/CentralControl?xsd=1" uri="src/main/resources/wsdl/engine/CentralControl.xsd_1.xsd"/>
+    <system systemId="http://javachallenge.loxon.hu:8443/engine/CentralControl?xsd=2" uri="src/main/resources/wsdl/engine/CentralControl.xsd_2.xsd"/>
+</catalog>
