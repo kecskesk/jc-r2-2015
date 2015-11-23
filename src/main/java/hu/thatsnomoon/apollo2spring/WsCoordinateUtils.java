@@ -31,6 +31,17 @@ public class WsCoordinateUtils {
     }
 
     /**
+     * Compares two WsCoordinets if they are at the same coordinate
+     *
+     * @param first
+     * @param second
+     * @return true if the two Cells are at the same coordinate, false otherwise
+     */
+    public static boolean isSameCells(WsCoordinate first, WsCoordinate second) {
+        return first.getX() == second.getX() && first.getY() == second.getY();
+    }
+
+    /**
      * Compares two WsCoordinets if they are each others neighbor
      *
      * @param from
@@ -38,10 +49,17 @@ public class WsCoordinateUtils {
      * @return true if the two Cells are neighbors, false otherwise
      */
     public static boolean isNeighborCells(WsCoordinate from, WsCoordinate to) {
-        return (from.getX() + 1) == to.getX()
-                || (from.getX() - 1) == to.getX()
-                || (from.getY() + 1) == to.getY()
-                || (from.getY() - 1) == to.getY();
+        if (from.getX() == to.getX()) {
+            if ((from.getY() - 1) == to.getY() || (from.getY() + 1) == to.getY()) {
+                return true;
+            }
+        } else if (from.getY() == to.getY()) {
+            if ((from.getX() - 1) == to.getX() || (from.getX() + 1) == to.getX()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
