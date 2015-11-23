@@ -11,8 +11,8 @@ import hu.thatsnomoon.apollo2spring.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.Coordinate;
 import hu.thatsnomoon.apollo2spring.Strategy;
 import hu.thatsnomoon.apollo2spring.WsCoordinateUtils;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -145,9 +145,9 @@ public class DefaultStrategy implements Strategy {
 
                     continue;
                 }
-                
+
                 // Break if we can't do anything
-                if (    remainingActionPoints < actionCostResponse.getDrill()
+                if (remainingActionPoints < actionCostResponse.getDrill()
                         && remainingActionPoints < actionCostResponse.getExplode()) {
                     break;
                 }
@@ -159,6 +159,8 @@ public class DefaultStrategy implements Strategy {
                 }
 
                 List<Scouting> neighbourCellList = this.apolloClient.watch(builderUnit.getId()).getScout();
+                neighbourCellList = WsCoordinateUtils.sortScoutings(neighbourCellList, defaultDirection);
+
                 remainingActionPoints -= actionCostResponse.getWatch();
                 Map<ObjectType, List<Scouting>> neighbourCells = new HashMap<>();
 

@@ -4,13 +4,52 @@ import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author NB57
  */
 public class WsCoordinateUtils {
+
+    public static final WsDirection[] UP_ORDER = {WsDirection.UP, WsDirection.RIGHT, WsDirection.LEFT, WsDirection.DOWN};
+    public static final WsDirection[] DOWN_ORDER = {WsDirection.DOWN, WsDirection.LEFT, WsDirection.RIGHT, WsDirection.UP};
+    public static final WsDirection[] RIGHT_ORDER = {WsDirection.RIGHT, WsDirection.UP, WsDirection.DOWN, WsDirection.LEFT};
+    public static final WsDirection[] LEFT_ORDER = {WsDirection.LEFT, WsDirection.DOWN, WsDirection.UP, WsDirection.RIGHT};
+
+    public static final WsDirection[][] LIST_OF_ORDERS = {UP_ORDER, DOWN_ORDER, RIGHT_ORDER, LEFT_ORDER};
+
+    public static List<Scouting> sortScoutings(List<Scouting> neighbors, WsDirection dir) {
+        List<Scouting> result = new ArrayList<>();
+
+        // Calculating the posiotion of the robot.
+        // It is the average of the scanned cell's coordinates.
+        int avgX = 0;
+        int avgY = 0;
+        for (Scouting cell : neighbors) {
+            avgX += cell.getCord().getX();
+            avgY += cell.getCord().getY();
+        }
+        WsCoordinate pos = new WsCoordinate();
+        pos.setX(avgX / 4);
+        pos.setY(avgY / 4);
+
+        for (WsDirection[] order : LIST_OF_ORDERS) {
+            if (order[0] == dir) {
+                for (WsDirection tempDir : order) {
+                    for (Scouting scouting : neighbors) {
+                        if (moveDirection(pos, scouting.getCord()) == tempDir) {
+                            result.add(scouting);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Prints a CommonResp object in readable format

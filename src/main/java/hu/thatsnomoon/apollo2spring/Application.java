@@ -9,6 +9,7 @@ import eu.loxon.centralcontrol.GetSpaceShuttlePosResponse;
 import eu.loxon.centralcontrol.IsMyTurnResponse;
 import eu.loxon.centralcontrol.StartGameResponse;
 import eu.loxon.centralcontrol.WsBuilderunit;
+import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.strategy.DefaultStrategy;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class Application {
             // Initializing the robots
             Map<Integer, BuilderUnit> robots = new HashMap<>();
             for (WsBuilderunit bu : startGameResponse.getUnits()) {
-                robots.put(bu.getUnitid(), new BuilderUnit(bu.getCord(), bu.getUnitid(), new DefaultStrategy(apolloClient)));
+                robots.put(bu.getUnitid(), new BuilderUnit(bu.getCord(), bu.getUnitid(), new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4])));
             }
 
             int lastRobotId = -1;
