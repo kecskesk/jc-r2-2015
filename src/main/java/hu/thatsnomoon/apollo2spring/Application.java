@@ -9,6 +9,7 @@ import eu.loxon.centralcontrol.GetSpaceShuttlePosResponse;
 import eu.loxon.centralcontrol.IsMyTurnResponse;
 import eu.loxon.centralcontrol.StartGameResponse;
 import eu.loxon.centralcontrol.WsBuilderunit;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.CommandLineRunner;
@@ -20,16 +21,18 @@ import org.springframework.context.annotation.Bean;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        System.out.println(Arrays.toString(args));
+
+        ApolloClient.centralControlUrl = args[0];
+        ApolloConfiguration.serverUrl = args[0];
+        ApolloConfiguration.user = args[1];
+        ApolloConfiguration.password = args[2];
+        SpringApplication.run(Application.class);
     }
 
     @Bean
     CommandLineRunner lookup(ApolloClient apolloClient) {
         return args -> {
-
-            System.setProperty("serverUrl", args[0]);
-            System.setProperty("username", args[1]);
-            System.setProperty("password", args[2]);
 
             StartGameResponse startGameResponse = apolloClient.startGame();
 

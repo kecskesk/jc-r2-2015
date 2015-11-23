@@ -14,7 +14,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
     /**
      * The server URL
      */
-    private static String centralControlUrl = System.getProperty("serverUrl");
+    public static String centralControlUrl;
 
     /**
      * Order builder unit to explode a cell
