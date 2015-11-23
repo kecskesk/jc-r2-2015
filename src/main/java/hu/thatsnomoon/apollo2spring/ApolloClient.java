@@ -14,7 +14,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
     /**
      * The server URL
      */
-    private final String centralControlUrl = "http://javachallenge.loxon.hu:8443/engine/CentralControl?wsdl";
+    private static String centralControlUrl = System.getProperty("serverUrl");
 
     /**
      * Order builder unit to explode a cell

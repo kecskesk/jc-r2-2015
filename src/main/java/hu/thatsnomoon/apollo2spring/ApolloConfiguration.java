@@ -1,7 +1,5 @@
 package hu.thatsnomoon.apollo2spring;
 
-import hu.thatsnomoon.apollo2spring.ApolloClient;
-import hu.thatsnomoon.apollo2spring.WebServiceMessageSenderWithAuth;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -20,7 +18,7 @@ public class ApolloConfiguration {
     @Bean
     public ApolloClient apolloClient(Jaxb2Marshaller marshaller) {
         ApolloClient client = new ApolloClient();
-        client.setDefaultUri("http://javachallenge.loxon.hu:8443/engine/CentralControl");
+        client.setDefaultUri(System.getProperty("serverUrl"));
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
 

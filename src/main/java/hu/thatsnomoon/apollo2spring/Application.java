@@ -20,12 +20,16 @@ import org.springframework.context.annotation.Bean;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
     CommandLineRunner lookup(ApolloClient apolloClient) {
         return args -> {
+
+            System.setProperty("serverUrl", args[0]);
+            System.setProperty("username", args[1]);
+            System.setProperty("password", args[2]);
 
             StartGameResponse startGameResponse = apolloClient.startGame();
 
