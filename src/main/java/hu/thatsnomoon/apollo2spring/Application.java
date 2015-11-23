@@ -61,7 +61,7 @@ public class Application {
                     int currentRobot = imtr.getResult().getBuilderUnit();
 
                     if (imtr.getResult().getTurnsLeft() % 10 == 0) {
-                        ((DefaultStrategy)robots.get(currentRobot).getStrategy()).setDefaultDirection(WsCoordinateUtils.UP_ORDER[(currentRobot + 1) % 4 ]);
+                        ((DefaultStrategy)robots.get(currentRobot).getStrategy()).setDefaultDirection(WsCoordinateUtils.UP_ORDER[(currentRobot + imtr.getResult().getTurnsLeft() / 10) % 4 ]);
                     }
                     // If it is our turn, query the current robotID and
                     // order the robot to step
