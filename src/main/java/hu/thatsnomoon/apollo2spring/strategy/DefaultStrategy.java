@@ -27,7 +27,7 @@ public class DefaultStrategy implements Strategy {
 
     private final ApolloClient apolloClient;
 
-    private final WsDirection defaultDirection;
+    private WsDirection defaultDirection;
 
     private final List<Coordinate> route;
 
@@ -220,7 +220,7 @@ public class DefaultStrategy implements Strategy {
                         remainingActionPoints -= actionCostResponse.getExplode();
                         remainingExplosives--;
                         System.out.println("Robot blowed up enemy Tunnel.(Fc8)");
-                        System.out.println("Position of the explose: " + nextCell.getCord() + ", " + nextCell.getCord().getY());
+                        System.out.println("Position of the explose: " + nextCell.getCord().getX() + ", " + nextCell.getCord().getY());
                         continue;
                     }
                 }
@@ -295,4 +295,13 @@ public class DefaultStrategy implements Strategy {
             e.printStackTrace();
         }
     }
+
+    public WsDirection getDefaultDirection() {
+        return defaultDirection;
+    }
+
+    public void setDefaultDirection(WsDirection defaultDirection) {
+        this.defaultDirection = defaultDirection;
+    }
+
 }

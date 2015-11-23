@@ -9,7 +9,6 @@ import eu.loxon.centralcontrol.GetSpaceShuttlePosResponse;
 import eu.loxon.centralcontrol.IsMyTurnResponse;
 import eu.loxon.centralcontrol.StartGameResponse;
 import eu.loxon.centralcontrol.WsBuilderunit;
-import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.strategy.DefaultStrategy;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,9 +58,13 @@ public class Application {
                 }
 
                 if (imtr.isIsYourTurn() && imtr.getResult().getBuilderUnit() != lastRobotId) {
+                    int currentRobot = imtr.getResult().getBuilderUnit();
+
+                    if (imtr.getResult().getTurnsLeft() % 10 == 0) {
+                        ((DefaultStrategy)robots.get(currentRobot).getStrategy()).setDefaultDirection(WsCoordinateUtils.UP_ORDER[(currentRobot + 1) % 4 ]);
+                    }
                     // If it is our turn, query the current robotID and
                     // order the robot to step
-                    int currentRobot = imtr.getResult().getBuilderUnit();
                     BuilderUnit builderUnit = robots.get(currentRobot);
                     builderUnit.step();
                     lastRobotId = currentRobot;
