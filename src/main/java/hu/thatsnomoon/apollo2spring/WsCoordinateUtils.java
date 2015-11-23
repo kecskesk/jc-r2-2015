@@ -1,16 +1,17 @@
 package hu.thatsnomoon.apollo2spring;
 
 import eu.loxon.centralcontrol.CommonResp;
+import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import java.util.List;
 
 /**
  *
  * @author NB57
  */
-
-
 public class WsCoordinateUtils {
+
     /**
      * Prints a CommonResp object in readable format
      *
@@ -67,8 +68,8 @@ public class WsCoordinateUtils {
      *
      * @param from
      * @param to
-     * @return  the direction in that points from the first cell to the second, if
-     *          cells are not neighbors, it returns null
+     * @return the direction in that points from the first cell to the second,
+     * if cells are not neighbors, it returns null
      */
     public static WsDirection moveDirection(WsCoordinate from, WsCoordinate to) {
         if (isNeighborCells(from, to)) {
@@ -125,4 +126,37 @@ public class WsCoordinateUtils {
 
         return neighbour;
     }
+
+    public static Scouting getDirectionScoutingFromWatch(List<Scouting> scoutings, WsCoordinate pos, WsDirection dir) {
+        if (dir == WsDirection.UP) {
+            for (Scouting s : scoutings) {
+                if (s.getCord().getY() - 1 == pos.getY()) {
+                    return s;
+                }
+            }
+        }
+        if (dir == WsDirection.DOWN) {
+            for (Scouting s : scoutings) {
+                if (s.getCord().getY() + 1 == pos.getY()) {
+                    return s;
+                }
+            }
+        }
+        if (dir == WsDirection.RIGHT) {
+            for (Scouting s : scoutings) {
+                if (s.getCord().getX() - 1 == pos.getX()) {
+                    return s;
+                }
+            }
+        }
+        if (dir == WsDirection.LEFT) {
+            for (Scouting s : scoutings) {
+                if (s.getCord().getX() + 1 == pos.getX()) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+
 }
