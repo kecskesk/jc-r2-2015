@@ -82,7 +82,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      *
      * @return IsMyTurnResponse from server
      */
-    public IsMyTurnResponse isMyTrun() {
+    public IsMyTurnResponse isMyTurn() {
         IsMyTurnRequest request = new IsMyTurnRequest();
 
         IsMyTurnResponse response = (IsMyTurnResponse) getWebServiceTemplate()
@@ -148,7 +148,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * @param dir the direction to structure a tunnel
      * @return StructureTunnelResponse from server
      */
-    public StructureTunnelResponse structureTunne(int unit, WsDirection dir) {
+    public StructureTunnelResponse structureTunnel(int unit, WsDirection dir) {
         StructureTunnelRequest request = new StructureTunnelRequest();
 
         request.setUnit(unit);
