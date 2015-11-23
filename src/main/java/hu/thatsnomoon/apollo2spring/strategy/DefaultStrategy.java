@@ -134,7 +134,11 @@ public class DefaultStrategy implements Strategy {
                     this.apolloClient.moveBuilderUnit(builderUnit.getId(), moveDirection);
                     remainingActionPoints -= actionCostResponse.getMove();
                     builderUnit.setPosition(lastStructuredCoordinate.getWsCoordinate());
-                    this.route.add(previousCell);
+                    if (!this.route.isEmpty() && this.route.get(this.route.size() - 1) == lastStructuredCoordinate) {
+                        this.route.remove(this.route.size() - 1);
+                    } else {
+                        this.route.add(previousCell);
+                    }
                     this.lastStructuredCoordinate = null;
                     System.out.println("Robot moved.");
                     System.out.println("New position of the robot: " + builderUnit.getPosition().getX() + ", " + builderUnit.getPosition().getY());
@@ -198,6 +202,29 @@ public class DefaultStrategy implements Strategy {
                     continue;
                 }
 
+                // Flowchart 8. blow up enemy tunnel
+                if (neighbourCells.get(ObjectType.TUNNEL).size() > 0 && remainingActionPoints >= actionCostResponse.getExplode() && remainingExplosives > 0) {
+
+                    Scouting nextCell = null;
+
+                    for (Scouting cell : neighbourCells.get(ObjectType.TUNNEL)) {
+                        if (!cell.getTeam().equals(ApolloConfiguration.user)) {
+                            nextCell = cell;
+                        }
+                    }
+
+                    if (nextCell != null) {
+                        WsDirection direction = WsCoordinateUtils.moveDirection(builderUnit.getPosition(), nextCell.getCord());
+                        // Explode cell
+                        this.apolloClient.explodeCell(builderUnit.getId(), direction);
+                        remainingActionPoints -= actionCostResponse.getExplode();
+                        remainingExplosives--;
+                        System.out.println("Robot blowed up enemy Tunnel.(Fc8)");
+                        System.out.println("Position of the explose: " + nextCell.getCord() + ", " + nextCell.getCord().getY());
+                        continue;
+                    }
+                }
+
                 // Flowchart - 6.
                 if (neighbourCells.get(ObjectType.TUNNEL).size() > 0 && remainingActionPoints >= actionCostResponse.getMove()) {
                     Coordinate coordinate = new Coordinate(neighbourCells.get(ObjectType.TUNNEL).get(0).getCord());
@@ -237,7 +264,8 @@ public class DefaultStrategy implements Strategy {
                 Scouting lastCellScout = null;
 
                 for (Scouting scout : neighbourCells.get(ObjectType.TUNNEL)) {
-                    if (new Coordinate(scout.getCord()).equals(this.route.get(this.route.size() - 1))) {
+                    if (scout.getTeam().equals(ApolloConfiguration.user)
+                            && new Coordinate(scout.getCord()).equals(this.route.get(this.route.size() - 1))) {
                         lastCellScout = scout;
                     }
                 }
@@ -264,6 +292,7 @@ public class DefaultStrategy implements Strategy {
         } catch (SoapResponseInvalidException e) {
             System.out.println("----------------- SoapResponseInvalidException has been thrown:");
             WsCoordinateUtils.print(e.getResponse());
+            e.printStackTrace();
         }
     }
 }
