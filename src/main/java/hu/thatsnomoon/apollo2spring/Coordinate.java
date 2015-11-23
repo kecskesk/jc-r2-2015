@@ -19,6 +19,10 @@ public class Coordinate {
         this.wsCoordinate = wsCoordinate;
     }
 
+    public WsCoordinate getWsCoordinate() {
+        return wsCoordinate;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -35,13 +39,11 @@ public class Coordinate {
             return false;
         }
         final Coordinate other = (Coordinate) obj;
-        if (this.wsCoordinate == null || other.wsCoordinate == null ) {
+        if (this.wsCoordinate == null || other.wsCoordinate == null) {
             return false;
         }
-        return (this.wsCoordinate.getX() == other.wsCoordinate.getX() ||
-                this.wsCoordinate.getY() == other.wsCoordinate.getY());
+        return (this.wsCoordinate.getX() == other.wsCoordinate.getX()
+                && this.wsCoordinate.getY() == other.wsCoordinate.getY());
     }
-
-
 
 }

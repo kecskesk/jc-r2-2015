@@ -18,7 +18,6 @@ public class WsCoordinateUtils {
      * @param response to print
      */
     public static void print(CommonResp response) {
-        System.out.println("------------------------------------------------------");
         System.out.println("Robot:\t" + response.getBuilderUnit());
         System.out.println("Action points:\t" + response.getActionPointsLeft());
         System.out.println("Explosives:\t" + response.getExplosivesLeft());
@@ -28,6 +27,8 @@ public class WsCoordinateUtils {
         System.out.println("\tBonus\t" + response.getScore().getBonus());
         System.out.println("\tPenalty\t" + response.getScore().getPenalty());
         System.out.println("\tTotal\t" + response.getScore().getTotal());
+        System.out.println("Type:\t" + response.getType());
+        System.out.println("Message:\t" + response.getMessage());
 
     }
 
@@ -74,20 +75,20 @@ public class WsCoordinateUtils {
     public static WsDirection moveDirection(WsCoordinate from, WsCoordinate to) {
         if (isNeighborCells(from, to)) {
             if (from.getX() == to.getX()) {
-                if (from.getY() > to.getY()) {
+                if (from.getY() < to.getY()) {
                     // UP
                     return WsDirection.UP;
-                } else if (from.getY() < to.getY()) {
+                } else if (from.getY() > to.getY()) {
                     // DOWN
                     return WsDirection.DOWN;
                 } else {
                     System.out.println("The X and Y coordinates of the shuttle and the exit position are the same!!!");
                 }
             } else if (from.getY() == to.getY()) {
-                if (from.getX() > to.getX()) {
+                if (from.getX() < to.getX()) {
                     // RIGHT
                     return WsDirection.RIGHT;
-                } else if (from.getX() < to.getX()) {
+                } else if (from.getX() > to.getX()) {
                     // LEFT
                     return WsDirection.LEFT;
                 } else {

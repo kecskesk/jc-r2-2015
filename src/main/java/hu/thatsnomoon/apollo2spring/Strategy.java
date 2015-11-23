@@ -11,7 +11,7 @@ public interface Strategy {
     /**
      * Time in milisecs while a round lasts
      */
-    static long ROUND_TIME = 2500;
+    static long ROUND_TIME = 1000;
 
     void step(BuilderUnit builderUnit);
 }

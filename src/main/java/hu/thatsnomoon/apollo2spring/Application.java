@@ -44,19 +44,26 @@ public class Application {
             // Initializing the robots
             Map<Integer, BuilderUnit> robots = new HashMap<>();
             for (WsBuilderunit bu : startGameResponse.getUnits()) {
-                robots.put(bu.getUnitid(), new BuilderUnit(bu.getCord(), bu.getUnitid(), new DefaultStrategy()));
+                robots.put(bu.getUnitid(), new BuilderUnit(bu.getCord(), bu.getUnitid(), new DefaultStrategy(apolloClient)));
             }
 
-            while (true) {
-                IsMyTurnResponse imtr = apolloClient.isMyTurn();
-                Thread.sleep(300);
+            int lastRobotId = -1;
 
-                if (imtr.isIsYourTurn()) {
+            while (true) {
+                Thread.sleep(300);
+                IsMyTurnResponse imtr = apolloClient.isMyTurn();
+
+                if (imtr.getResult().getTurnsLeft() == 0) {
+                    break;
+                }
+
+                if (imtr.isIsYourTurn() && imtr.getResult().getBuilderUnit() != lastRobotId) {
                     // If it is our turn, query the current robotID and
                     // order the robot to step
                     int currentRobot = imtr.getResult().getBuilderUnit();
                     BuilderUnit builderUnit = robots.get(currentRobot);
                     builderUnit.step();
+                    lastRobotId = currentRobot;
                 }
             }
         };
