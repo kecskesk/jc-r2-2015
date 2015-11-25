@@ -1,5 +1,6 @@
 package hu.thatsnomoon.apollo2spring;
 
+import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
 import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.ObjectType;
 import eu.loxon.centralcontrol.Scouting;

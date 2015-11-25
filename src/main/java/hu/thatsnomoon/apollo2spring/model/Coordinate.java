@@ -1,4 +1,4 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.model;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import java.util.Objects;

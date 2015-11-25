@@ -1,18 +1,16 @@
 package hu.thatsnomoon.apollo2spring.strategy;
 
-import error.SoapResponseInvalidException;
+import hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException;
 import eu.loxon.centralcontrol.ActionCostResponse;
 import eu.loxon.centralcontrol.ObjectType;
 import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsDirection;
-import hu.thatsnomoon.apollo2spring.ApolloClient;
-import hu.thatsnomoon.apollo2spring.ApolloConfiguration;
-import hu.thatsnomoon.apollo2spring.BuilderUnit;
-import hu.thatsnomoon.apollo2spring.Coordinate;
-import hu.thatsnomoon.apollo2spring.Strategy;
-import hu.thatsnomoon.apollo2spring.WsCoordinateUtils;
+import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
+import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
+import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
+import hu.thatsnomoon.apollo2spring.model.Coordinate;
+import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.Set;
  */
 public class DefaultStrategy implements Strategy {
 
-    private final ApolloClient apolloClient;
+    private final ApolloClientService apolloClient;
 
     private WsDirection defaultDirection;
 
@@ -35,14 +33,14 @@ public class DefaultStrategy implements Strategy {
 
     private Coordinate lastStructuredCoordinate;
 
-    public DefaultStrategy(ApolloClient apolloClient) {
+    public DefaultStrategy(ApolloClientService apolloClient) {
         this.apolloClient = apolloClient;
         this.defaultDirection = WsDirection.DOWN;
         this.route = new ArrayList<>();
         this.ignoredCoordinates = new HashSet<>();
     }
 
-    public DefaultStrategy(ApolloClient apolloClient, WsDirection defaultDirection) {
+    public DefaultStrategy(ApolloClientService apolloClient, WsDirection defaultDirection) {
         this.apolloClient = apolloClient;
         this.defaultDirection = defaultDirection;
         this.route = new ArrayList<>();
@@ -100,7 +98,6 @@ public class DefaultStrategy implements Strategy {
 
                         // Move into cell + refresh builderUnit coordinate
                         this.apolloClient.moveBuilderUnit(builderUnit.getId(), exitDirection);
-                        builderUnit.setPosition(exitPos.getWsCoordinate());
                         remainingActionPoints -= actionCostResponse.getMove();
                         System.out.println("Robot moved.(Fc2)");
                         System.out.println("New position of the robot: " + builderUnit.getPosition().getX() + ", " + builderUnit.getPosition().getY());
@@ -133,7 +130,6 @@ public class DefaultStrategy implements Strategy {
                     // Move into last lastStructuredCoordinate
                     this.apolloClient.moveBuilderUnit(builderUnit.getId(), moveDirection);
                     remainingActionPoints -= actionCostResponse.getMove();
-                    builderUnit.setPosition(lastStructuredCoordinate.getWsCoordinate());
                     if (!this.route.isEmpty() && this.route.get(this.route.size() - 1) == lastStructuredCoordinate) {
                         this.route.remove(this.route.size() - 1);
                     } else {
@@ -247,7 +243,6 @@ public class DefaultStrategy implements Strategy {
                         // Move into that cell
                         this.apolloClient.moveBuilderUnit(builderUnit.getId(), direction);
                         remainingActionPoints -= actionCostResponse.getMove();
-                        builderUnit.setPosition(coordinate.getWsCoordinate());
                         route.add(previousCell);
                         System.out.println("Robot moved. (Fc6.)");
                         System.out.println("New position of the robot: " + builderUnit.getPosition().getX() + ", " + builderUnit.getPosition().getY());
@@ -279,7 +274,6 @@ public class DefaultStrategy implements Strategy {
                     // Move into that cell
                     this.apolloClient.moveBuilderUnit(builderUnit.getId(), direction);
                     remainingActionPoints -= actionCostResponse.getMove();
-                    builderUnit.setPosition(coordinate.getWsCoordinate());
                     ignoredCoordinates.add(previousCell);
                     this.route.remove(this.route.size() - 1);
                     System.out.println("Robot moved (Fc7.)");

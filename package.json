@@ -1,0 +1,11 @@
+{
+    "name": "Apollo2Spring",
+    "version": "0.0.1",
+    "private": true,
+    "devDependencies": {
+        "bower": "~1.4.2"
+    },
+    "scripts": {
+        "postinstall": "bower install"
+    }
+}

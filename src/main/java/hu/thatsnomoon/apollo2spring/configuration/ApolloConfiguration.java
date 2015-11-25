@@ -1,5 +1,6 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.configuration;
 
+import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -20,8 +21,8 @@ public class ApolloConfiguration {
     }
 
     @Bean
-    public ApolloClient apolloClient(Jaxb2Marshaller marshaller) {
-        ApolloClient client = new ApolloClient();
+    public ApolloClientService apolloClient(Jaxb2Marshaller marshaller) {
+        ApolloClientService client = new ApolloClientService();
         client.setDefaultUri(serverUrl);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);

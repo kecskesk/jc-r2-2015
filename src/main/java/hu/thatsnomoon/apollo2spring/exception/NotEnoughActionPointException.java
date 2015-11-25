@@ -1,4 +1,4 @@
-package error;
+package hu.thatsnomoon.apollo2spring.exception;
 
 /**
  *

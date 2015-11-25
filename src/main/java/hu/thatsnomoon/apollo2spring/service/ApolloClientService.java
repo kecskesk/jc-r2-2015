@@ -1,7 +1,11 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.service;
 
-import error.SoapResponseInvalidException;
+import hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException;
 import eu.loxon.centralcontrol.*;
+import hu.thatsnomoon.apollo2spring.component.ApolloStandingComponent;
+import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
@@ -10,12 +14,11 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
  *
  * @author Dombi Soma
  */
-public class ApolloClient extends WebServiceGatewaySupport {
+@Service
+public class ApolloClientService extends WebServiceGatewaySupport {
 
-    /**
-     * The server URL
-     */
-    public static String centralControlUrl;
+    @Autowired
+    private ApolloStandingComponent standingComponent;
 
     /**
      * Cached responses
@@ -29,7 +32,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * @param unit the ID of the builder unit
      * @param dir the direction to explode cell
      * @return ExplodeCellResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public ExplodeCellResponse explodeCell(int unit, WsDirection dir) throws SoapResponseInvalidException {
         ExplodeCellRequest request = new ExplodeCellRequest();
@@ -38,11 +41,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         ExplodeCellResponse response = (ExplodeCellResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(request, response);
 
         return response;
     }
@@ -51,17 +56,19 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * Cost of each action
      *
      * @return ActionCostResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public ActionCostResponse getActionCost() throws SoapResponseInvalidException {
         ActionCostRequest request = new ActionCostRequest();
 
         ActionCostResponse response = (ActionCostResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(response);
 
         return response;
     }
@@ -70,7 +77,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * Get the position of the space shuttle
      *
      * @return GetSpaceShuttlePosResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public GetSpaceShuttlePosResponse getSpaceShuttlePos() throws SoapResponseInvalidException {
         if (this.cachedShuttlePos != null) {
@@ -79,11 +86,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         GetSpaceShuttlePosRequest request = new GetSpaceShuttlePosRequest();
 
         GetSpaceShuttlePosResponse response = (GetSpaceShuttlePosResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(response);
 
         this.cachedShuttlePos = response;
         return response;
@@ -93,7 +102,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * Get the exit cell position of the space shuttle
      *
      * @return GetSpaceShuttleExitPosResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public GetSpaceShuttleExitPosResponse getSpaceShuttleExitPos() throws SoapResponseInvalidException {
         if (this.cachedShuttleExitPos != null) {
@@ -102,12 +111,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         GetSpaceShuttleExitPosRequest request = new GetSpaceShuttleExitPosRequest();
 
         GetSpaceShuttleExitPosResponse response = (GetSpaceShuttleExitPosResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
 
+        this.standingComponent.refreshStanding(response);
 
         this.cachedShuttleExitPos = response;
         return response;
@@ -117,17 +127,19 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * Is my turn
      *
      * @return IsMyTurnResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public IsMyTurnResponse isMyTurn() throws SoapResponseInvalidException {
         IsMyTurnRequest request = new IsMyTurnRequest();
 
         IsMyTurnResponse response = (IsMyTurnResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(response);
 
         return response;
     }
@@ -138,7 +150,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * @param unit the ID of the builder unit
      * @param dir the direction to move
      * @return MoveBuilderUnitResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public MoveBuilderUnitResponse moveBuilderUnit(int unit, WsDirection dir) throws SoapResponseInvalidException {
         MoveBuilderUnitRequest request = new MoveBuilderUnitRequest();
@@ -147,11 +159,14 @@ public class ApolloClient extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         MoveBuilderUnitResponse response = (MoveBuilderUnitResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(request, response);
+
         return response;
     }
 
@@ -160,7 +175,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      *
      * @param unit the ID of the builder unit
      * @return RadarResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public RadarResponse radar(int unit) throws SoapResponseInvalidException {
         RadarRequest request = new RadarRequest();
@@ -168,11 +183,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         request.setUnit(unit);
 
         RadarResponse response = (RadarResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(response);
 
         return response;
     }
@@ -181,17 +198,20 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * Start the game
      *
      * @return StartGameResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public StartGameResponse startGame() throws SoapResponseInvalidException {
         StartGameRequest request = new StartGameRequest();
 
         StartGameResponse response = (StartGameResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.initMap(response);
+        this.standingComponent.initUnits(response, this);
 
         return response;
     }
@@ -202,7 +222,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      * @param unit the ID of the builder unit
      * @param dir the direction to structure a tunnel
      * @return StructureTunnelResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public StructureTunnelResponse structureTunnel(int unit, WsDirection dir) throws SoapResponseInvalidException {
         StructureTunnelRequest request = new StructureTunnelRequest();
@@ -211,11 +231,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         StructureTunnelResponse response = (StructureTunnelResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(request, response);
 
         return response;
     }
@@ -225,7 +247,7 @@ public class ApolloClient extends WebServiceGatewaySupport {
      *
      * @param unit the ID of the builder unit
      * @return WatchResponse from server
-     * @throws error.SoapResponseInvalidException
+     * @throws hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException
      */
     public WatchResponse watch(int unit) throws SoapResponseInvalidException {
         WatchRequest request = new WatchRequest();
@@ -233,11 +255,13 @@ public class ApolloClient extends WebServiceGatewaySupport {
         request.setUnit(unit);
 
         WatchResponse response = (WatchResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(centralControlUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
         }
+
+        this.standingComponent.refreshStanding(response);
 
         return response;
     }

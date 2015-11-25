@@ -1,12 +1,13 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.utils;
 
 import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import org.springframework.context.annotation.Scope;
+import java.util.Map;
 
 /**
  *
@@ -20,6 +21,34 @@ public class WsCoordinateUtils {
     public static final WsDirection[] LEFT_ORDER = {WsDirection.LEFT, WsDirection.DOWN, WsDirection.UP, WsDirection.RIGHT};
 
     public static final WsDirection[][] LIST_OF_ORDERS = {UP_ORDER, DOWN_ORDER, RIGHT_ORDER, LEFT_ORDER};
+
+    public static final Map<WsDirection, WsCoordinate> directionCoordinate;
+
+    static {
+        WsCoordinate up = new WsCoordinate();
+        up.setX(1);
+        up.setY(0);
+
+        WsCoordinate down = new WsCoordinate();
+        down.setX(-1);
+        down.setY(0);
+
+        WsCoordinate right = new WsCoordinate();
+        right.setX(0);
+        right.setY(1);
+
+        WsCoordinate left = new WsCoordinate();
+        left.setX(0);
+        left.setY(-1);
+
+        directionCoordinate = new HashMap<>();
+        directionCoordinate.put(WsDirection.UP, up);
+        directionCoordinate.put(WsDirection.DOWN, down);
+        directionCoordinate.put(WsDirection.RIGHT, right);
+        directionCoordinate.put(WsDirection.LEFT, left);
+    }
+
+
 
     public static List<Scouting> sortScoutings(List<Scouting> neighbors, WsDirection dir) {
         List<Scouting> result = new ArrayList<>();
@@ -51,24 +80,30 @@ public class WsCoordinateUtils {
         return result;
     }
 
+    public static String commonRespToString (CommonResp response) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Robot:\t").append(response.getBuilderUnit());
+        sb.append("Action points:\t").append(response.getActionPointsLeft());
+        sb.append("Explosives:\t").append(response.getExplosivesLeft());
+        sb.append("Turns left:\t").append(response.getTurnsLeft());
+        sb.append("Scores:");
+        sb.append("\tReward\t").append(response.getScore().getReward());
+        sb.append("\tBonus\t").append(response.getScore().getBonus());
+        sb.append("\tPenalty\t").append(response.getScore().getPenalty());
+        sb.append("\tTotal\t").append(response.getScore().getTotal());
+        sb.append("Type:\t").append(response.getType());
+        sb.append("Message:\t").append(response.getMessage());
+        return sb.toString();
+    }
+
+
     /**
      * Prints a CommonResp object in readable format
      *
      * @param response to print
      */
     public static void print(CommonResp response) {
-        System.out.println("Robot:\t" + response.getBuilderUnit());
-        System.out.println("Action points:\t" + response.getActionPointsLeft());
-        System.out.println("Explosives:\t" + response.getExplosivesLeft());
-        System.out.println("Turns left:\t" + response.getTurnsLeft());
-        System.out.println("Scores:");
-        System.out.println("\tReward\t" + response.getScore().getReward());
-        System.out.println("\tBonus\t" + response.getScore().getBonus());
-        System.out.println("\tPenalty\t" + response.getScore().getPenalty());
-        System.out.println("\tTotal\t" + response.getScore().getTotal());
-        System.out.println("Type:\t" + response.getType());
-        System.out.println("Message:\t" + response.getMessage());
-
+        System.out.println(commonRespToString(response));
     }
 
     /**
@@ -136,6 +171,20 @@ public class WsCoordinateUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Calculates the coordinate from origin coordinate and direction.
+     *
+     * @param from
+     * @param direction
+     * @return the coordinate
+     */
+    public static WsCoordinate directionToCoordinate(WsCoordinate from, WsDirection direction) {
+        WsCoordinate coordinate = new WsCoordinate();
+        coordinate.setX(from.getX() + directionCoordinate.get(direction).getX());
+        coordinate.setX(from.getY() + directionCoordinate.get(direction).getY());
+        return coordinate;
     }
 
     /**

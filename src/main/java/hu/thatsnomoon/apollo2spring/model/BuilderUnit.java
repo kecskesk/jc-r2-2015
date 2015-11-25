@@ -1,5 +1,6 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.model;
 
+import hu.thatsnomoon.apollo2spring.strategy.Strategy;
 import eu.loxon.centralcontrol.WsCoordinate;
 
 /**

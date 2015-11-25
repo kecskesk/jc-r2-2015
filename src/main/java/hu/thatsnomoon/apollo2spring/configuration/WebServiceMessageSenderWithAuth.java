@@ -1,14 +1,14 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.configuration;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import org.springframework.util.Base64Utils;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
-import sun.misc.BASE64Encoder;
 
 public class WebServiceMessageSenderWithAuth extends HttpUrlConnectionMessageSender {
 
-    private String user;
-    private String password;
+    private final String user;
+    private final String password;
 
     public WebServiceMessageSenderWithAuth(String user, String password) {
         this.user = user;
@@ -19,10 +19,9 @@ public class WebServiceMessageSenderWithAuth extends HttpUrlConnectionMessageSen
     protected void prepareConnection(HttpURLConnection connection)
             throws IOException {
 
-        BASE64Encoder enc = new sun.misc.BASE64Encoder();
         // "thatsnomoon:OCBW6378"
         String userpassword = user + ":" + password;
-        String encodedAuthorization = enc.encode(userpassword.getBytes());
+        String encodedAuthorization = new String(Base64Utils.encode(userpassword.getBytes()));
         connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
 
         super.prepareConnection(connection);

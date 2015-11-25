@@ -1,4 +1,6 @@
-package hu.thatsnomoon.apollo2spring;
+package hu.thatsnomoon.apollo2spring.strategy;
+
+import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 
 /**
  *
