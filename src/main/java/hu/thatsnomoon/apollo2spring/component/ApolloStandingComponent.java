@@ -1,5 +1,6 @@
 package hu.thatsnomoon.apollo2spring.component;
 
+import com.google.common.collect.Lists;
 import eu.loxon.centralcontrol.ActionCostResponse;
 import eu.loxon.centralcontrol.ExplodeCellRequest;
 import eu.loxon.centralcontrol.ExplodeCellResponse;
@@ -86,7 +87,9 @@ public class ApolloStandingComponent {
 
     public void initUnits(StartGameResponse response, ApolloClientService apolloClient) {
         for (WsBuilderunit bu : response.getUnits()) {
-            this.units.put(bu.getUnitid(), new BuilderUnit(bu.getCord(), bu.getUnitid(), new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4])));
+            this.units.put(bu.getUnitid(),
+                    new BuilderUnit(bu.getCord(), bu.getUnitid(),
+                            Lists.newArrayList(new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4]))));
         }
     }
 

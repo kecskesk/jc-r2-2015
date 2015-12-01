@@ -228,4 +228,11 @@ public class GoToStrategy implements Strategy {
 
         return false;
     }
+
+    @Override
+    public boolean isEnded() {
+        return this.ready;
+    }
+
+
 }

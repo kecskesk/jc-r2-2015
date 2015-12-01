@@ -6,6 +6,7 @@ import hu.thatsnomoon.apollo2spring.component.ApolloStandingComponent;
 import hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException;
 import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.strategy.DefaultStrategy;
+import hu.thatsnomoon.apollo2spring.strategy.Strategy;
 import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,23 +75,36 @@ public class GameRunnerService {
             }
 
             if (imtr.isIsYourTurn() && imtr.getResult().getBuilderUnit() != lastRobotId) {
+                long startTime = System.currentTimeMillis();
+
                 int currentRobot = imtr.getResult().getBuilderUnit();
+                BuilderUnit builderUnit = standingComponent.getUnits().get(currentRobot);
 
                 if (imtr.getResult().getTurnsLeft() % 10 == 0) {
-                    if (standingComponent.getUnits().get(currentRobot).getStrategy() instanceof DefaultStrategy) {
-                        ((DefaultStrategy) standingComponent.getUnits().get(currentRobot).getStrategy()).setDefaultDirection(WsCoordinateUtils.UP_ORDER[(currentRobot + imtr.getResult().getTurnsLeft() / 10) % 4]);
+                    if (builderUnit.getStrategies() instanceof DefaultStrategy) {
+                        ((DefaultStrategy) builderUnit.getStrategies()).setDefaultDirection(WsCoordinateUtils.UP_ORDER[(currentRobot + imtr.getResult().getTurnsLeft() / 10) % 4]);
                     }
                 }
-                // If it is our turn, query the current robotID and
-                // order the robot to step
-                BuilderUnit builderUnit = standingComponent.getUnits().get(currentRobot);
-                builderUnit.step();
+                /**
+                 *
+                 * If it is our turn, query the current robotID and order the robot to step. If the current strategy is ended, then we
+                 * should call a new step on the robot, to change the previous strategy to the new one. For example, if the current strategy
+                 * is Goto, and the robot arrived to the target, the strategy will be ended, so we could call the step once more, to do an
+                 * other strategy in this round.
+                 */
+
+                do {
+                    builderUnit.step();
+                } while (builderUnit.getStrategies().size() > 0
+                        && builderUnit.getStrategies().get(0).isEnded()
+                        && (System.currentTimeMillis() - startTime) < Strategy.ROUND_TIME);
+
                 lastRobotId = currentRobot;
             }
         }
     }
 
-    public void stopGame () {
+    public void stopGame() {
         this.stopRunning = true;
     }
 }

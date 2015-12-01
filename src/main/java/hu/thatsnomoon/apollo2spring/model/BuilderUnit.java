@@ -2,6 +2,7 @@ package hu.thatsnomoon.apollo2spring.model;
 
 import hu.thatsnomoon.apollo2spring.strategy.Strategy;
 import eu.loxon.centralcontrol.WsCoordinate;
+import java.util.List;
 
 /**
  *
@@ -11,16 +12,22 @@ public class BuilderUnit {
 
     private WsCoordinate position;
     private int id;
-    private Strategy strategy;
+    private List<Strategy> strategies;
 
-    public BuilderUnit(WsCoordinate position, int id, Strategy strategy) {
+    public BuilderUnit(WsCoordinate position, int id, List<Strategy> strategies) {
         this.position = position;
         this.id = id;
-        this.strategy = strategy;
+        this.strategies = strategies;
     }
 
-    public void step(){
-        strategy.step(this);
+    public void step() {
+        if (strategies.size() > 1 && strategies.get(0).isEnded()) {
+            strategies.remove(0);
+        }
+
+        if (strategies.size() > 0) {
+            strategies.get(0).step(this);
+        }
     }
 
     public WsCoordinate getPosition() {
@@ -39,11 +46,11 @@ public class BuilderUnit {
         this.id = id;
     }
 
-    public Strategy getStrategy() {
-        return strategy;
+    public List<Strategy> getStrategies() {
+        return strategies;
     }
 
-    public void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
+    public void setStrategies(List<Strategy> strategies) {
+        this.strategies = strategies;
     }
 }

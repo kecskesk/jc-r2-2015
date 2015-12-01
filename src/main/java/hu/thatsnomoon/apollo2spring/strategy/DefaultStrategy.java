@@ -298,4 +298,9 @@ public class DefaultStrategy implements Strategy {
         this.defaultDirection = defaultDirection;
     }
 
+    @Override
+    public boolean isEnded() {
+        return false;
+    }
+
 }
