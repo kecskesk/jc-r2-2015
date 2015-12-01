@@ -48,7 +48,21 @@ public class WsCoordinateUtils {
         directionCoordinate.put(WsDirection.LEFT, left);
     }
 
+    public static WsCoordinate positionOfBuilderUnit(List<Scouting> neighbors) {
 
+        int avgX = 0;
+        int avgY = 0;
+        for (Scouting cell : neighbors) {
+            avgX += cell.getCord().getX();
+            avgY += cell.getCord().getY();
+        }
+
+        WsCoordinate pos = new WsCoordinate();
+        pos.setX(avgX / 4);
+        pos.setY(avgY / 4);
+
+        return pos;
+    }
 
     public static List<Scouting> sortScoutings(List<Scouting> neighbors, WsDirection dir) {
         List<Scouting> result = new ArrayList<>();
@@ -80,7 +94,7 @@ public class WsCoordinateUtils {
         return result;
     }
 
-    public static String commonRespToString (CommonResp response) {
+    public static String commonRespToString(CommonResp response) {
         StringBuilder sb = new StringBuilder();
         sb.append("Robot:\t").append(response.getBuilderUnit());
         sb.append("Action points:\t").append(response.getActionPointsLeft());
@@ -95,7 +109,6 @@ public class WsCoordinateUtils {
         sb.append("Message:\t").append(response.getMessage());
         return sb.toString();
     }
-
 
     /**
      * Prints a CommonResp object in readable format
@@ -183,7 +196,7 @@ public class WsCoordinateUtils {
     public static WsCoordinate directionToCoordinate(WsCoordinate from, WsDirection direction) {
         WsCoordinate coordinate = new WsCoordinate();
         coordinate.setX(from.getX() + directionCoordinate.get(direction).getX());
-        coordinate.setX(from.getY() + directionCoordinate.get(direction).getY());
+        coordinate.setY(from.getY() + directionCoordinate.get(direction).getY());
         return coordinate;
     }
 
@@ -248,4 +261,16 @@ public class WsCoordinateUtils {
         return null;
     }
 
+    public static WsDirection oppositeDirection(WsDirection dir) {
+        if (dir == WsDirection.DOWN) {
+            return WsDirection.UP;
+        }
+        if (dir == WsDirection.UP) {
+            return WsDirection.DOWN;
+        }
+        if (dir == WsDirection.LEFT) {
+            return WsDirection.RIGHT;
+        }
+        return WsDirection.LEFT;
+    }
 }
