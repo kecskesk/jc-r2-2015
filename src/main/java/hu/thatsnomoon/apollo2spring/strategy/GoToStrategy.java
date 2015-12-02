@@ -1,27 +1,24 @@
 package hu.thatsnomoon.apollo2spring.strategy;
 
-import com.sun.xml.internal.ws.model.wsdl.WSDLDirectProperties;
 import eu.loxon.centralcontrol.ActionCostResponse;
 import eu.loxon.centralcontrol.ObjectType;
 import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import eu.loxon.centralcontrol.WsScore;
+import hu.thatsnomoon.apollo2spring.Application;
 import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
 import hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException;
 import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.model.Coordinate;
 import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
 import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * This strategy contains the logic to shepherd the builder unit to a given
- * coordinate.
+ * This strategy contains the logic to shepherd the builder unit to a given coordinate.
  *
  * @author NB57
  */
@@ -33,6 +30,8 @@ public class GoToStrategy implements Strategy {
 
     private Set<Coordinate> blockedCells;
 
+    private boolean ready = false;
+
     public GoToStrategy(ApolloClientService apolloClient, WsCoordinate DESTINATION) {
         this.apolloClient = apolloClient;
         this.DESTINATION = DESTINATION;
@@ -41,8 +40,7 @@ public class GoToStrategy implements Strategy {
     /**
      * Steps in a round with the given builderUnit
      *
-     * NOTE : This implementation trusts the builder unit's position provided by
-     * the builder unit itself.
+     * NOTE : This implementation trusts the builder unit's position provided by the builder unit itself.
      *
      * @param builderUnit
      */
@@ -66,38 +64,47 @@ public class GoToStrategy implements Strategy {
             while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
                 // If we are at the destination, there is no need for further action.
                 if (new Coordinate(builderUnit.getPosition()).equals(new Coordinate(DESTINATION))) {
-                    continue;
+                    this.ready = true;
+                    break;
                 } else {
 
                     List<Scouting> neighbourCellList = this.apolloClient.watch(builderUnit.getId()).getScout();
-                    WsDirection moveDirection = primaryMoveDirection(builderUnit);
-                    Scouting moveTarget;
-                    moveTarget = WsCoordinateUtils.getDirectionScoutingFromWatch(
-                            neighbourCellList,
-                            builderUnit.getPosition(),
-                            moveDirection);
 
-                    if (shouldAvoid(moveTarget)) {
-                        moveTarget = WsCoordinateUtils.getDirectionScoutingFromWatch(
+                    List<WsDirection> sortedDirections = sortMoveDirections(builderUnit);
+
+                    Scouting moveTarget = null;
+                    WsDirection moveDirection = null;
+
+                    for (WsDirection tempDirection : sortedDirections) {
+                        Scouting tempMoveTarget = WsCoordinateUtils.getDirectionScoutingFromWatch(
                                 neighbourCellList,
                                 builderUnit.getPosition(),
-                                secondaryMoveDirection(builderUnit));
-                        moveDirection = secondaryMoveDirection(builderUnit);
+                                tempDirection);
+                        if (!shouldAvoid(moveTarget, remainingExplosives)) {
+                            if (sortedDirections.indexOf(tempDirection) > 2) {
+                                blockedCells.add(new Coordinate(builderUnit.getPosition()));
+                            }
+                            moveTarget = tempMoveTarget;
+                            moveDirection = tempDirection;
+                            break;
+                        }
                     }
 
-                    if (shouldAvoid(moveTarget)) {
-                        moveTarget = WsCoordinateUtils.getDirectionScoutingFromWatch(
-                                neighbourCellList,
-                                builderUnit.getPosition(),
-                                tertiaryMoveDirection(builderUnit));
-                        moveDirection = tertiaryMoveDirection(builderUnit);
-
-                        blockedCells.add(new Coordinate(builderUnit.getPosition()));
-
-                    }
-                    // Backstep logic
-                    if (shouldAvoid(moveTarget)) {
+                    // If we are blocked from every neighbour, then wait for next turn
+                    if (moveTarget == null) {
                         break;
+                    }
+
+                    // If ours, than move into that cell
+                    if (moveTarget.getObject().equals(ObjectType.TUNNEL)
+                            && moveTarget.getTeam().equals(ApolloConfiguration.user)
+                            && remainingActionPoints >= actionCostResponse.getMove()) {
+                        this.apolloClient.moveBuilderUnit(builderUnit.getId(), moveDirection);
+                        remainingActionPoints -= actionCostResponse.getMove();
+                        System.out.println("Robot moved.");
+                        System.out.println("New position of the robot: " + builderUnit.getPosition().getX() + ", " + builderUnit.getPosition().getY());
+
+                        continue;
                     }
 
                     // If ROCK, structure tunnel
@@ -111,7 +118,9 @@ public class GoToStrategy implements Strategy {
                     }
 
                     // If GRANITE or ENEMY TUNNEL blow up
-                    if ((moveTarget.getObject().equals(ObjectType.GRANITE) || (moveTarget.getObject().equals(ObjectType.TUNNEL) && !moveTarget.getTeam().equals(ApolloConfiguration.user)))
+                    if ((moveTarget.getObject().equals(ObjectType.GRANITE)
+                            || (moveTarget.getObject().equals(ObjectType.TUNNEL)
+                            && !moveTarget.getTeam().equals(ApolloConfiguration.user)))
                             && remainingActionPoints >= actionCostResponse.getExplode()
                             && remainingExplosives > 0) {
                         // Explode cell
@@ -123,6 +132,8 @@ public class GoToStrategy implements Strategy {
                         continue;
                     }
 
+                    // If we can't move, just end the turn
+                    break;
                 }
 
             }
@@ -133,7 +144,7 @@ public class GoToStrategy implements Strategy {
         }
     }
 
-    public WsDirection primaryMoveDirection(BuilderUnit builderUnit) {
+    private WsDirection primaryMoveDirection(BuilderUnit builderUnit) {
         final WsCoordinate CURRENT = builderUnit.getPosition();
 
         if (DESTINATION.getX() < CURRENT.getX()) {
@@ -157,8 +168,12 @@ public class GoToStrategy implements Strategy {
 
     }
 
-    public WsDirection secondaryMoveDirection(BuilderUnit builderUnit) {
+    private WsDirection secondaryMoveDirection(BuilderUnit builderUnit) {
         final WsCoordinate CURRENT = builderUnit.getPosition();
+
+        if (DESTINATION.getX() == CURRENT.getX()) {
+            return WsDirection.RIGHT;
+        }
 
         if (DESTINATION.getY() < CURRENT.getY()) {
             return WsDirection.DOWN;
@@ -168,27 +183,42 @@ public class GoToStrategy implements Strategy {
             return WsDirection.UP;
         }
 
-        if (DESTINATION.getX() < CURRENT.getX()) {
-            return WsDirection.LEFT;
-        }
-
-        if (DESTINATION.getX() > CURRENT.getX()) {
-            return WsDirection.RIGHT;
+        if (DESTINATION.getX() != CURRENT.getX()) {
+            return WsDirection.UP;
         }
 
         // Otherwise the positions are equal, and that should be handled by the Strategy.
         throw new RuntimeException("The Destination and the builder units position is the same.");
     }
 
-    public WsDirection tertiaryMoveDirection(BuilderUnit builderUnit) {
+    private WsDirection tertiaryMoveDirection(BuilderUnit builderUnit) {
         return WsCoordinateUtils.oppositeDirection(this.secondaryMoveDirection(builderUnit));
     }
 
+    private WsDirection quaternaryMoveDirection(BuilderUnit builderUnit) {
+        return WsCoordinateUtils.oppositeDirection(this.primaryMoveDirection(builderUnit));
+    }
+
+    public List<WsDirection> sortMoveDirections(BuilderUnit builderUnit) {
+        List<WsDirection> sortedDirections = new ArrayList<>();
+
+        sortedDirections.add(primaryMoveDirection(builderUnit));
+        sortedDirections.add(secondaryMoveDirection(builderUnit));
+        sortedDirections.add(tertiaryMoveDirection(builderUnit));
+        sortedDirections.add(quaternaryMoveDirection(builderUnit));
+
+        return sortedDirections;
+    }
+
     // If we should avoid the cell it returns true.
-    public boolean shouldAvoid(Scouting scouting) {
+    public boolean shouldAvoid(Scouting scouting, int remainingExplosives) {
         if (scouting.getObject() == ObjectType.SHUTTLE
                 || scouting.getObject() == ObjectType.BUILDER_UNIT
                 || scouting.getObject() == ObjectType.OBSIDIAN) {
+            return true;
+        }
+
+        if (scouting.getObject() == ObjectType.GRANITE && remainingExplosives < 1) {
             return true;
         }
 

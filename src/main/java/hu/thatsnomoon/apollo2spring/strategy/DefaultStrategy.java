@@ -33,8 +33,6 @@ public class DefaultStrategy implements Strategy {
 
     private Coordinate lastStructuredCoordinate;
 
-    // Should change to one line:
-    // this(apolloClient, WsDirection.DOWN);
     public DefaultStrategy(ApolloClientService apolloClient) {
         this.apolloClient = apolloClient;
         this.defaultDirection = WsDirection.DOWN;
