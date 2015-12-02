@@ -26,7 +26,7 @@ public class Coordinate {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.wsCoordinate);
+        hash = 59 * hash + Objects.hashCode(this.wsCoordinate.getX() + this.wsCoordinate.getY());
         return hash;
     }
 

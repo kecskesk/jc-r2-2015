@@ -33,6 +33,8 @@ public class DefaultStrategy implements Strategy {
 
     private Coordinate lastStructuredCoordinate;
 
+    // Should change to one line:
+    // this(apolloClient, WsDirection.DOWN);
     public DefaultStrategy(ApolloClientService apolloClient) {
         this.apolloClient = apolloClient;
         this.defaultDirection = WsDirection.DOWN;
@@ -70,7 +72,7 @@ public class DefaultStrategy implements Strategy {
             this.ignoredCoordinates.clear();
             this.lastStructuredCoordinate = null;
 
-            while (System.currentTimeMillis() - startTime < ROUND_TIME) {
+            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
 
                 Coordinate shuttlePosition = new Coordinate(apolloClient.getSpaceShuttlePos().getCord());
 
