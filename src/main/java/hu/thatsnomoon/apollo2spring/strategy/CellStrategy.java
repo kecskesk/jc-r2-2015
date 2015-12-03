@@ -257,4 +257,9 @@ public class CellStrategy implements Strategy {
         return 0;
 
     }
+
+    @Override
+    public boolean isEnded() {
+        return false;
+    }
 }

@@ -13,7 +13,7 @@ public interface Strategy {
     /**
      * Time in milisecs while a round lasts
      */
-    static long ROUND_TIME = 1000;
+    static long ROUND_TIME = 600;
 
     /**
      * One step means one round of the given builder unit. The step shouldn't last more than the ROUND_TIME value in milisecs.

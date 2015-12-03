@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameRunnerService {
 
+    public static final int MIN_INTERVAL = 150;
+
     @Autowired
     private ApolloClientService apolloClient;
 
@@ -54,7 +56,7 @@ public class GameRunnerService {
 
         while (!stopRunning) {
             try {
-                Thread.sleep(300);
+                Thread.sleep(MIN_INTERVAL);
             } catch (InterruptedException ex) {
                 logger.warn("Runner can't sleep.", ex);
                 continue;

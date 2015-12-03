@@ -98,16 +98,27 @@ public class WsCoordinateUtils {
     public static String commonRespToString(CommonResp response) {
         StringBuilder sb = new StringBuilder();
         sb.append("Robot:\t").append(response.getBuilderUnit());
+        sb.append("\n");
         sb.append("Action points:\t").append(response.getActionPointsLeft());
+        sb.append("\n");
         sb.append("Explosives:\t").append(response.getExplosivesLeft());
+        sb.append("\n");
         sb.append("Turns left:\t").append(response.getTurnsLeft());
+        sb.append("\n");
         sb.append("Scores:");
+        sb.append("\n");
         sb.append("\tReward\t").append(response.getScore().getReward());
+        sb.append("\n");
         sb.append("\tBonus\t").append(response.getScore().getBonus());
+        sb.append("\n");
         sb.append("\tPenalty\t").append(response.getScore().getPenalty());
+        sb.append("\n");
         sb.append("\tTotal\t").append(response.getScore().getTotal());
+        sb.append("\n");
         sb.append("Type:\t").append(response.getType());
+        sb.append("\n");
         sb.append("Message:\t").append(response.getMessage());
+        sb.append("\n");
         return sb.toString();
     }
 
