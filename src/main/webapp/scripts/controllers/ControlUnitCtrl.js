@@ -8,11 +8,16 @@ app.controller('ControlUnitCtrl', function ($scope, $interval, controlUnitServic
     $scope.latestStanding = "";
     $scope.initLatestStanding = function () {
         $interval($scope.getLastestStanding, 500);
-    }
+    };
 
     $scope.getLastestStanding = function () {
-        $scope.latestStanding = controlUnitService.getLatestStanding();
-    }
+        $scope.latestStanding = controlUnitService.getLatestStanding();   
+    };
+    
+    $scope.setSelectedPosition = function(x, y) {
+        $scope.selectedX = x;
+        $scope.selectedY = y;
+    };
 
 
     $scope.startGame = controlUnitService.startGame;
@@ -52,11 +57,11 @@ app.controller('ControlUnitCtrl', function ($scope, $interval, controlUnitServic
                 controlUnitService.changeToGoToStrategyOfBuilder($scope.selectedUnit, $scope.selectedX, $scope.selectedY);
             }
         }
-    }
+    };
 
     $scope.changeMode = function () {
         $scope.add = !$scope.add;
-    }
+    };
 
     $scope.showCell = function (cell) {
         if (cell)
@@ -74,7 +79,7 @@ app.controller('ControlUnitCtrl', function ($scope, $interval, controlUnitServic
         if (cell.object == "GRANITE")
             return 'g';
         return 'x';
-    }
+    };
 
     $scope.getColor = function (celltype) {
         if (celltype == "o") {
@@ -99,5 +104,5 @@ app.controller('ControlUnitCtrl', function ($scope, $interval, controlUnitServic
             return 'white';
         }
         return 'red';
-    }
+    };
 });

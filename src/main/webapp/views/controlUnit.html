@@ -82,8 +82,9 @@
 
         <table id="standingmap" style="height: 100%;">
             <tr ng-repeat="row in latestStanding.map">
-                <td ng-repeat="cell in row" ng-style="{ 'background-color': getColor(showCell(cell)) }">
-                    {{showCell(cell)}}&emsp;
+                <td ng-repeat="cell in row" ng-style="{ 'background-color': getColor(showCell(cell)) }"
+                    ng-click="setSelectedPosition(cell.cord.x, cell.cord.y)">
+                    {{showCell(cell)}}-{{cell.cord.x}}-{{cell.cord.y}}
                 </td>
             </tr>
         </table>
