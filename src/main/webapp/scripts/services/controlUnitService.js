@@ -40,11 +40,11 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
 
     var changeToGoToStrategyOfBuilder = function (_id, _x, _y) {
         var data = {
-            id : _id,
-            x : _x,
-            y : _y
-        }
-        $http.post(url + "changeToGoToStrategyOfRobot", data);
+            id : parseInt(_id),
+            x : parseInt(_x),
+            y : parseInt(_y)
+        };
+        $http.post(url + "changeToGoToStrategyOfBuilder", data);
     };
 
     var addGoToStrategyOfBuilder = function (_id, _x, _y) {
@@ -77,6 +77,6 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
         changeToDefaultStrategyOfBuilder: changeToDefaultStrategyOfBuilder,
         addDefaultStrategyOfBuilder: addDefaultStrategyOfBuilder,
         changeToGoToStrategyOfBuilder: changeToGoToStrategyOfBuilder,
-        addGoToStrategyOfBuilder: addGoToStrategyOfBuilder 
+        addGoToStrategyOfBuilder: addGoToStrategyOfBuilder
     };
 });

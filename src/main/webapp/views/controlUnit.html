@@ -1,24 +1,31 @@
 <br />
 
 <div>
+    Unit 0 position: {{latestStanding().units[0].position}} </br>
+    Unit 1 position: {{latestStanding().units[1].position}} </br>
+    Unit 2 position: {{latestStanding().units[2].position}} </br>
+    Unit 3 position: {{latestStanding().units[3].position}} </br>
+</div>
+
+<div>
     <div>Unit : <input name="selectedUnit" ng-model="selectedUnit" /></div>
-        
+
     <div>
-        Strategy : 
+        Strategy :
         <select name="selectedStrategy" ng-model="selectedStrategy">
             <option value="DEF">Default strategy</option>
             <option value="GOTO">Go to strategy</option>
             <option value="CELL">Cell strategy</option>
         </select>
     </div>
-        
+
     <div ng-show="selectedStrategy === 'GOTO' || selectedStrategy === 'CELL'">
         <div>X : <input name="selectedX" ng-model="selectedX" /></div>
         <div>Y : <input name="selectedY" ng-model="selectedY" /></div>
     </div>
-    
+
     <div ng-show="selectedStrategy === 'DEF' || selectedStrategy === 'CELL'">
-        DIR : 
+        DIR :
         <select name="selectedDirection" ng-model="selectedDirection">
             <option value="UP">UP</option>
             <option value="DOWN">DOWN</option>
@@ -26,16 +33,16 @@
             <option value="RIGHT">RIGHT</option>
         </select>
     </div>
-    
+
     <div>Unit : {{selectedUnit}}</div>
     <div>Direction : {{selectedDirection}}</div>
     <div>Strategy : {{selectedStrategy}}</div>
     <div>X : {{selectedX}}</div>
     <div>Y : {{selectedY}}</div>
-       
+
     <div>
         <div ng-if="add">
-           ADD 
+           ADD
            <button ng-click="changeMode()">SET TO CHANGE</button>
         </div>
     </div>
@@ -45,9 +52,9 @@
            <button ng-click="changeMode()">SET TO ADD</button>
         </div>
     </div>
-    
+
     <div>
-        <button ng-click="setStrategy()">SEND</button> 
+        <button ng-click="setStrategy()">SEND</button>
     </div>
 </div>
 
@@ -60,5 +67,5 @@
     <button ng-click="startBinding()">Start Binding Standing </button>
     <button ng-click="stopBinding()">Stop Binding Standing </button>
     <p>{{latestStanding()}} </p>
-    
+
 </div>

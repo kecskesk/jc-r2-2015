@@ -17,14 +17,26 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
 @Service
 public class ApolloClientService extends WebServiceGatewaySupport {
 
+    private static final String serverUrl = "http://192.168.1.2:8443/engine/CentralControl?wsdl";
+
+    public static ApolloClientService apolloClient;
+
     @Autowired
     private ApolloStandingComponent standingComponent;
+
+    public ApolloClientService() {
+        apolloClient = this;
+    }
+
+
 
     /**
      * Cached responses
      */
     private GetSpaceShuttleExitPosResponse cachedShuttleExitPos = null;
     private GetSpaceShuttlePosResponse cachedShuttlePos = null;
+
+
 
     /**
      * Order builder unit to explode a cell
@@ -41,7 +53,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         ExplodeCellResponse response = (ExplodeCellResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -62,7 +74,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         ActionCostRequest request = new ActionCostRequest();
 
         ActionCostResponse response = (ActionCostResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(serverUrl, request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -86,7 +98,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         GetSpaceShuttlePosRequest request = new GetSpaceShuttlePosRequest();
 
         GetSpaceShuttlePosResponse response = (GetSpaceShuttlePosResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -111,7 +123,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         GetSpaceShuttleExitPosRequest request = new GetSpaceShuttleExitPosRequest();
 
         GetSpaceShuttleExitPosResponse response = (GetSpaceShuttleExitPosResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -133,7 +145,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         IsMyTurnRequest request = new IsMyTurnRequest();
 
         IsMyTurnResponse response = (IsMyTurnResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -159,7 +171,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         MoveBuilderUnitResponse response = (MoveBuilderUnitResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -183,7 +195,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         request.setUnit(unit);
 
         RadarResponse response = (RadarResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -204,7 +216,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         StartGameRequest request = new StartGameRequest();
 
         StartGameResponse response = (StartGameResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -231,7 +243,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         request.setDirection(dir);
 
         StructureTunnelResponse response = (StructureTunnelResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());
@@ -255,7 +267,7 @@ public class ApolloClientService extends WebServiceGatewaySupport {
         request.setUnit(unit);
 
         WatchResponse response = (WatchResponse) getWebServiceTemplate()
-                .marshalSendAndReceive(request, new SoapActionCallback(ApolloConfiguration.serverUrl));
+                .marshalSendAndReceive(request, new SoapActionCallback(serverUrl));
 
         if (response.getResult().getType() == ResultType.INVALID) {
             throw new SoapResponseInvalidException(response.getResult());

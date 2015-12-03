@@ -21,8 +21,7 @@ public class StrategyChangerService {
     @Autowired
     private ApolloStandingComponent standingComponent;
 
-    @Autowired
-    private ApolloClientService apolloClientService;
+    private final ApolloClientService apolloClientService = ApolloClientService.apolloClient;
 
     public void changeToDefaultStrategyOfRobot( int unitId, WsDirection direction) {
         standingComponent.getUnits().get(unitId).setStrategies( Lists.newArrayList(new DefaultStrategy(apolloClientService, direction)));
