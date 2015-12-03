@@ -24,8 +24,7 @@ public class CellStrategy implements Strategy {
     /**
      * Stores the next target cell for each cell.
      *
-     * Key: where the builder unit is on the PATH/ROUTE. Value: where the
-     * builder unit should move on, to stay on the PATH/ROUTE.
+     * Key: where the builder unit is on the PATH/ROUTE. Value: where the builder unit should move on, to stay on the PATH/ROUTE.
      */
     private final HashMap<Coordinate, Coordinate> routeTable;
 
@@ -33,19 +32,8 @@ public class CellStrategy implements Strategy {
 
     public CellStrategy(ApolloClientService apolloClient, WsDirection dir, WsCoordinate pos) {
         this.apolloClient = apolloClient;
-        this.routeTable = new HashMap<>();
 
-        HashMap<Coordinate, Coordinate> temp = createRouteTable(new Coordinate(pos), 100, 100);
-
-        for (Coordinate c : temp.keySet()) {
-            WsCoordinate key = c.getWsCoordinate();
-            WsCoordinate value = temp.get(c).getWsCoordinate();
-
-            WsCoordinate newKey = rotate(key, degreeFromDirectoin(dir));
-            WsCoordinate newValue = rotate(value, degreeFromDirectoin(dir));
-
-            routeTable.put(new Coordinate(newKey), new Coordinate(newValue));
-        }
+        this.routeTable = createRouteTable(new Coordinate(pos), 100, 100, degreeFromDirectoin(dir));
     }
 
     @Override
@@ -64,6 +52,8 @@ public class CellStrategy implements Strategy {
 
                 List<Scouting> neighbourCellList = this.apolloClient.watch(builderUnit.getId()).getScout();
 
+                System.out.println("----------------------------------------");
+                System.out.println(new Coordinate(builderUnit.getPosition()));
                 Coordinate moveTargetCoordinate = routeTable.get(new Coordinate(builderUnit.getPosition()));
 
                 WsDirection moveDirection = WsCoordinateUtils.moveDirection(builderUnit.getPosition(), moveTargetCoordinate.getWsCoordinate());
@@ -113,7 +103,7 @@ public class CellStrategy implements Strategy {
 
     }
 
-    public static HashMap<Coordinate, Coordinate> createRouteTable(Coordinate firstCell, int xBorder, int yBorder) {
+    public static HashMap<Coordinate, Coordinate> createRouteTable(Coordinate firstCell, int xBorder, int yBorder, double degree) {
         HashMap<Coordinate, Coordinate> localRoute = new HashMap<>();
 
         int counter = 0;
@@ -201,12 +191,18 @@ public class CellStrategy implements Strategy {
 
         }
 
+        HashMap<Coordinate, Coordinate> rotated = new HashMap<>();
+
+        for (Coordinate c : localRoute.keySet()) {
+            rotated.put(new Coordinate(rotate(c.getWsCoordinate(), degree)), new Coordinate(rotate(localRoute.get(c).getWsCoordinate(), degree)));
+        }
+
         // CONVERTING TO WORLD COORDINATE
         HashMap<Coordinate, Coordinate> result = new HashMap<>();
 
-        for (Coordinate c : localRoute.keySet()) {
+        for (Coordinate c : rotated.keySet()) {
             result.put(new Coordinate(localeToWorld(c.getWsCoordinate(), firstCell.getWsCoordinate())),
-                    new Coordinate(localeToWorld(localRoute.get(c).getWsCoordinate(), firstCell.getWsCoordinate())));
+                    new Coordinate(localeToWorld(rotated.get(c).getWsCoordinate(), firstCell.getWsCoordinate())));
         }
 
         return result;
@@ -224,8 +220,7 @@ public class CellStrategy implements Strategy {
     /**
      * Rotate coordinates
      *
-     * @see
-     * https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/2drota.htm
+     * @see https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/2drota.htm
      * @param pos
      * @param degree
      * @return

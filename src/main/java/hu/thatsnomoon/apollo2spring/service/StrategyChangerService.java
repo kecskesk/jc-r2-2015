@@ -31,11 +31,13 @@ public class StrategyChangerService {
 
     public void changeToGoToStrategyOfBuilder( int unitId, WsCoordinate destination) {
         standingComponent.getUnits().get(unitId).setStrategies( Lists.newArrayList(new GoToStrategy(apolloClientService, destination)));
+        this.addDefaultStrategyToRobot(unitId, WsDirection.UP);
     }
 
     public void changeToCellStrategyOfRobot(int unitId, WsDirection direction) {
         BuilderUnit builder = standingComponent.getUnits().get(unitId);
         builder.setStrategies(Lists.newArrayList(new CellStrategy(apolloClientService, direction, builder.getPosition())));
+        this.addDefaultStrategyToRobot(unitId, direction);
     }
 
     public void addDefaultStrategyToRobot( int unitId, WsDirection direction) {
@@ -44,11 +46,13 @@ public class StrategyChangerService {
 
     public void addGoToStrategyToBuilder( int unitId, WsCoordinate destination) {
         standingComponent.getUnits().get(unitId).getStrategies().add(new GoToStrategy(apolloClientService, destination));
+        this.addDefaultStrategyToRobot(unitId, WsDirection.UP);
     }
 
     public void addCellStrategyToBuilder(int unitId, WsDirection direction) {
         BuilderUnit builder = standingComponent.getUnits().get(unitId);
         builder.getStrategies().add(new CellStrategy(apolloClientService, direction, builder.getPosition()));
+        this.addDefaultStrategyToRobot(unitId, direction);
     }
 
     public void changeStrategiesOfRobot(int unitId, List<Strategy> strategies) {

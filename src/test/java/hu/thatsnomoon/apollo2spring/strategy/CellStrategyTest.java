@@ -115,6 +115,7 @@ public class CellStrategyTest {
         assertEquals(c6, routeTable.get(c5));
         assertEquals(c8, routeTable.get(c7));
         assertEquals(c10, routeTable.get(c9));
+        assertTrue(routeTable.keySet().contains(new Coordinate(robotPos)));
     }
 
     @Test
