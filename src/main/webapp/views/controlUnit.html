@@ -66,6 +66,27 @@
     <button ng-click="stopGame()">Stop Game </button>
     <button ng-click="startBinding()">Start Binding Standing </button>
     <button ng-click="stopBinding()">Stop Binding Standing </button>
-    <p>{{latestStanding()}} </p>
 
+    <div ng-init="initLatestStanding()">
+        <p>MYTURN? {{latestStanding.isMyTurn}} </p>
+
+        <p>AcPt: {{latestStanding.commonResponse.actionPointsLeft}}
+         EXPL: {{latestStanding.commonResponse.explosivesLeft}} 
+         TURN: {{latestStanding.commonResponse.turnsLeft}} 
+         REWD: {{latestStanding.commonResponse.score.reward}} 
+         Bonus {{latestStanding.commonResponse.score.bonus}} 
+         PENt: {{latestStanding.commonResponse.score.penalty}} 
+         TOTAL {{latestStanding.commonResponse.score.total}} </p>
+
+        <div ng-repeat="unit in latestStanding.units">{{unit.id}} {{unit.position}} {{unit.strategies}}</div>
+
+        <table id="standingmap" style="height: 100%;">
+            <tr ng-repeat="row in latestStanding.map">
+                <td ng-repeat="cell in row" ng-style="{ 'background-color': getColor(showCell(cell)) }">
+                    {{showCell(cell)}}&emsp;
+                </td>
+            </tr>
+        </table>
+      
+    </div>
 </div>

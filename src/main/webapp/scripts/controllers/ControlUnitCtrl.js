@@ -2,10 +2,19 @@
 
 'use strict';
 
-app.controller('ControlUnitCtrl', function ($scope, controlUnitService) {
+app.controller('ControlUnitCtrl', function ($scope, $interval, controlUnitService) {
     controlUnitService.startBinding();
 
-    $scope.latestStanding = function () { return controlUnitService.getLatestStanding(); }
+    $scope.latestStanding = "";
+    $scope.initLatestStanding = function () { 
+        $interval($scope.getLastestStanding, 500);
+    }
+    
+    $scope.getLastestStanding = function() {
+        $scope.latestStanding = controlUnitService.getLatestStanding();
+    }
+   
+    
     $scope.startGame = controlUnitService.startGame;
     $scope.stopGame = controlUnitService.stopGame;
     $scope.startBinding = controlUnitService.startBinding;
@@ -43,5 +52,48 @@ app.controller('ControlUnitCtrl', function ($scope, controlUnitService) {
     
     $scope.changeMode = function() {
         $scope.add = !$scope.add;
+    }
+    
+    $scope.showCell = function(cell) {
+        if(cell)
+            if(cell.object)
+                if(cell.object == "OBSIDIAN")
+                    return 'o';
+                if(cell.object == "ROCK")
+                    return 'c';
+                if(cell.object == "TUNNEL")
+                    return 'u';
+                if(cell.object == "SHUTTLE")
+                    return 's';
+                if(cell.object == "BUILDER_UNIT")
+                    return 'b';
+                if(cell.object == "GRANITE")
+                    return 'g';
+        return 'x';
+    }
+    
+    $scope.getColor = function(celltype) {
+        if(celltype == "o"){
+            return 'black';
+        }
+        if(celltype == "c"){
+            return 'gray';
+        }
+        if(celltype == "u"){
+            return 'blue';
+        }
+        if(celltype == "s"){
+            return 'yellow';
+        }
+        if(celltype == "b"){
+            return 'cyan';
+        }
+        if(celltype == "g"){
+            return 'black';
+        }
+        if(celltype == "x"){
+            return 'white';
+        }
+        return 'red';
     }
 });
