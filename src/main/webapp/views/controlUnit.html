@@ -1,10 +1,10 @@
 <br />
 
 <div>
-    Unit 0 position: {{latestStanding().units[0].position}} </br>
-    Unit 1 position: {{latestStanding().units[1].position}} </br>
-    Unit 2 position: {{latestStanding().units[2].position}} </br>
-    Unit 3 position: {{latestStanding().units[3].position}} </br>
+    Unit 0 position: {{latestStanding.units[0].position}} </br>
+    Unit 1 position: {{latestStanding.units[1].position}} </br>
+    Unit 2 position: {{latestStanding.units[2].position}} </br>
+    Unit 3 position: {{latestStanding.units[3].position}} </br>
 </div>
 
 <div>
@@ -71,11 +71,11 @@
         <p>MYTURN? {{latestStanding.isMyTurn}} </p>
 
         <p>AcPt: {{latestStanding.commonResponse.actionPointsLeft}}
-         EXPL: {{latestStanding.commonResponse.explosivesLeft}} 
-         TURN: {{latestStanding.commonResponse.turnsLeft}} 
-         REWD: {{latestStanding.commonResponse.score.reward}} 
-         Bonus {{latestStanding.commonResponse.score.bonus}} 
-         PENt: {{latestStanding.commonResponse.score.penalty}} 
+         EXPL: {{latestStanding.commonResponse.explosivesLeft}}
+         TURN: {{latestStanding.commonResponse.turnsLeft}}
+         REWD: {{latestStanding.commonResponse.score.reward}}
+         Bonus {{latestStanding.commonResponse.score.bonus}}
+         PENt: {{latestStanding.commonResponse.score.penalty}}
          TOTAL {{latestStanding.commonResponse.score.total}} </p>
 
         <div ng-repeat="unit in latestStanding.units">{{unit.id}} {{unit.position}} {{unit.strategies}}</div>
@@ -87,6 +87,6 @@
                 </td>
             </tr>
         </table>
-      
+
     </div>
 </div>

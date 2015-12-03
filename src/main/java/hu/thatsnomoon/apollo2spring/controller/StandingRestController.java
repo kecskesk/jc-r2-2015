@@ -4,6 +4,7 @@ import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.component.ApolloStandingComponent;
 import hu.thatsnomoon.apollo2spring.exception.HttpInvalidParamsException;
+import hu.thatsnomoon.apollo2spring.model.CellStrategyParams;
 import hu.thatsnomoon.apollo2spring.model.DefaultStrategyParams;
 import hu.thatsnomoon.apollo2spring.model.GoToRequestParams;
 import hu.thatsnomoon.apollo2spring.service.GameRunnerService;
@@ -115,5 +116,39 @@ public class StandingRestController {
         destination.setY(params.getY());
         strategyChangerService.addGoToStrategyToBuilder(params.getId(), destination);
     }
+
+    /**
+     * REST Api for changing the robots strategy to goto strategy. After calling this, you should add an other strategy to the robot.
+     *
+     * @param params Should have x, y, id int fields
+     */
+    @RequestMapping(value = "/changeToCellStrategyOfBuilder", method = RequestMethod.POST)
+    public void changeToCellStrategyOfBuilder(@RequestBody CellStrategyParams params) {
+
+        try {
+            strategyChangerService.changeToCellStrategyOfRobot(params.getId(), WsDirection.valueOf(params.getDirection()));
+        } catch (IllegalArgumentException e) {
+            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + params.getDirection() + "'.", e);
+            throw new HttpInvalidParamsException();
+        }
+    }
+
+    /**
+     * REST Api for changing the robots strategy to goto strategy. After calling this, you should add an other strategy to the robot.
+     *
+     * @param params Should have x, y, id int fields
+     */
+    @RequestMapping(value = "/addCellStrategyToBuilder", method = RequestMethod.POST)
+    public void addCellStrategyToBuilder(@RequestBody CellStrategyParams params) {
+
+        try {
+            strategyChangerService.addCellStrategyToBuilder(params.getId(), WsDirection.valueOf(params.getDirection()));
+        } catch (IllegalArgumentException e) {
+            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + params.getDirection() + "'.", e);
+            throw new HttpInvalidParamsException();
+        }
+    }
+
+
 
 }

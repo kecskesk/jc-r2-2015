@@ -95,11 +95,7 @@ public class GameRunnerService {
                  * other strategy in this round.
                  */
 
-                do {
-                    builderUnit.step();
-                } while (builderUnit.getStrategies().size() > 0
-                        && builderUnit.getStrategies().get(0).isEnded()
-                        && (System.currentTimeMillis() - startTime) < Strategy.ROUND_TIME);
+                builderUnit.step();
 
                 lastRobotId = currentRobot;
             }

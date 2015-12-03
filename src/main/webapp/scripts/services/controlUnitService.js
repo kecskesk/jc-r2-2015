@@ -56,6 +56,22 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
         $http.post(url + "addGoToStrategyToRobot", data);
     };
 
+    var changeToCellStrategyOfBuilder = function (_id, _direction) {
+        var data = {
+            id : _id,
+            direction : _direction
+        };
+        $http.post(url + "changeToCellStrategyOfBuilder", data);
+    };
+
+    var addToCellStrategyOfBuilder = function (_id, _direction) {
+        var data = {
+            id : _id,
+            direction : _direction
+        };
+        $http.post(url + "addCellStrategyToBuilder", data);
+    };
+
     var startBinding = function () {
         bindingPromise = $interval(bindLatestStanding, 500);
     };
@@ -77,6 +93,8 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
         changeToDefaultStrategyOfBuilder: changeToDefaultStrategyOfBuilder,
         addDefaultStrategyOfBuilder: addDefaultStrategyOfBuilder,
         changeToGoToStrategyOfBuilder: changeToGoToStrategyOfBuilder,
-        addGoToStrategyOfBuilder: addGoToStrategyOfBuilder
+        addGoToStrategyOfBuilder: addGoToStrategyOfBuilder,
+        changeToCellStrategyOfBuilder: changeToCellStrategyOfBuilder,
+        addToCellStrategyOfBuilder: addToCellStrategyOfBuilder
     };
 });
