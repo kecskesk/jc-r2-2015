@@ -30,6 +30,8 @@ public class CellStrategy implements Strategy {
 
     private final ApolloClientService apolloClient;
 
+    private boolean ready = false;
+
     public CellStrategy(ApolloClientService apolloClient, WsDirection dir, WsCoordinate pos) {
         this.apolloClient = apolloClient;
 
@@ -93,12 +95,18 @@ public class CellStrategy implements Strategy {
                     System.out.println("Position of the explosion: " + moveTarget.getCord().getX() + ", " + moveTarget.getCord().getY());
                     continue;
                 }
+
+                this.ready = true;
+                break;
             }
 
         } catch (SoapResponseInvalidException e) {
             System.out.println("----------------- SoapResponseInvalidException has been thrown:");
             WsCoordinateUtils.print(e.getResponse());
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            this.ready = true;
         }
 
     }
@@ -260,6 +268,6 @@ public class CellStrategy implements Strategy {
 
     @Override
     public boolean isEnded() {
-        return false;
+        return ready;
     }
 }

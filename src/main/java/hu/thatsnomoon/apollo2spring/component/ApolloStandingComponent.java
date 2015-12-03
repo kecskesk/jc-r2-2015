@@ -99,7 +99,6 @@ public class ApolloStandingComponent {
             this.units.put(bu.getUnitid(),
                     new BuilderUnit(bu.getCord(), bu.getUnitid(),
                             Lists.newArrayList(
-                                    new ShuttleStrategy(apolloClient),
                                     new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4])
 
 //                                    new ShuttleStrategy(apolloClient),
