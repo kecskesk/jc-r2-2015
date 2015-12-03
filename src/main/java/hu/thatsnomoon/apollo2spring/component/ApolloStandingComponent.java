@@ -109,10 +109,10 @@ public class ApolloStandingComponent {
             i++;
         }
 
-        this.units.get(0).setStrategies(Lists.newArrayList(
-                new ShuttleStrategy(apolloClient),
-                new CellStrategy(apolloClient, WsDirection.UP, this.units.get(0).getPosition())
-        ));
+//        this.units.get(0).setStrategies(Lists.newArrayList(
+//                new ShuttleStrategy(apolloClient),
+//                new CellStrategy(apolloClient, WsDirection.UP, this.units.get(0).getPosition())
+//        ));
     }
 
     public void refreshStanding(ActionCostResponse response) {
