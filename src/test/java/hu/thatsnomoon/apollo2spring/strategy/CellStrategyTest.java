@@ -132,4 +132,14 @@ public class CellStrategyTest {
         assertEquals(local.getY() + transition.getY(), world.getY());
 
     }
+
+    @Test
+    public void testRotation() {
+        WsCoordinate pos = new WsCoordinate();
+        pos.setX(1);
+        pos.setY(3);
+
+        assertEquals(-pos.getY(), CellStrategy.rotate(pos, 90).getX());
+        assertEquals(pos.getX(), CellStrategy.rotate(pos, 90).getY());
+    }
 }
