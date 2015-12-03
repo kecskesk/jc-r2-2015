@@ -20,7 +20,11 @@ public class Coordinate {
     }
 
     public WsCoordinate getWsCoordinate() {
-        return wsCoordinate;
+        WsCoordinate result = new WsCoordinate();
+        result.setX(wsCoordinate.getX());
+        result.setY(wsCoordinate.getY());
+
+        return result;
     }
 
     @Override
@@ -46,4 +50,8 @@ public class Coordinate {
                 && this.wsCoordinate.getY() == other.wsCoordinate.getY());
     }
 
+    @Override
+    public String toString() {
+        return this.wsCoordinate.getX() + " ; " + this.wsCoordinate.getY();
+    }
 }

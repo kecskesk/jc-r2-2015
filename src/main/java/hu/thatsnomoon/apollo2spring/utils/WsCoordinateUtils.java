@@ -64,6 +64,7 @@ public class WsCoordinateUtils {
         return pos;
     }
 
+    @Deprecated
     public static List<Scouting> sortScoutings(List<Scouting> neighbors, WsDirection dir) {
         List<Scouting> result = new ArrayList<>();
 
@@ -243,5 +244,12 @@ public class WsCoordinateUtils {
             return WsDirection.RIGHT;
         }
         return WsDirection.LEFT;
+    }
+
+    public static WsCoordinate createFromXY(int x, int y) {
+        WsCoordinate result = new WsCoordinate();
+        result.setX(x);
+        result.setY(y);
+        return result;
     }
 }

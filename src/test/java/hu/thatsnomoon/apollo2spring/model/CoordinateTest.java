@@ -81,11 +81,18 @@ public class CoordinateTest {
         wc2.setX(8);
         wc2.setY(64);
 
+        WsCoordinate wc3 = new WsCoordinate();
+        wc3.setX(64);
+        wc3.setY(8);
+
         Set<Coordinate> awesomeSet = new HashSet<>();
 
         awesomeSet.add(new Coordinate(wc1));
         boolean contains = awesomeSet.contains(new Coordinate(wc2));
+        boolean notContains = awesomeSet.contains(new Coordinate(wc3));
         assertEquals(true, contains);
+        assertEquals(false, notContains);
+
     }
 
 }
