@@ -23,11 +23,10 @@ import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
 import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
 import hu.thatsnomoon.apollo2spring.strategy.DefaultStrategy;
+import hu.thatsnomoon.apollo2spring.strategy.ShuttleStrategy;
 import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.jboss.logging.Logger;
 import org.springframework.stereotype.Component;
@@ -93,7 +92,10 @@ public class ApolloStandingComponent {
         for (WsBuilderunit bu : response.getUnits()) {
             this.units.put(bu.getUnitid(),
                     new BuilderUnit(bu.getCord(), bu.getUnitid(),
-                            Lists.newArrayList(new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4]))));
+                            Lists.newArrayList(
+                                    new ShuttleStrategy(apolloClient),
+                                    new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4])
+                            )));
         }
     }
 
