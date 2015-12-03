@@ -6,6 +6,7 @@ import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
+import hu.thatsnomoon.apollo2spring.exception.SoapResponseInvalidException;
 import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.model.Coordinate;
 import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
@@ -26,7 +27,7 @@ public class CellStrategy implements Strategy {
      * Key: where the builder unit is on the PATH/ROUTE. Value: where the
      * builder unit should move on, to stay on the PATH/ROUTE.
      */
-    private static HashMap<Coordinate, Coordinate> routeTable;
+    private final HashMap<Coordinate, Coordinate> routeTable;
 
     private final ApolloClientService apolloClient;
 
@@ -59,7 +60,8 @@ public class CellStrategy implements Strategy {
             int remainingExplosives = actionCostResponse.getAvailableExplosives();
 
             long startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
+            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME && remainingActionPoints > 0) {
+
                 List<Scouting> neighbourCellList = this.apolloClient.watch(builderUnit.getId()).getScout();
 
                 Coordinate moveTargetCoordinate = routeTable.get(new Coordinate(builderUnit.getPosition()));
@@ -103,7 +105,10 @@ public class CellStrategy implements Strategy {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SoapResponseInvalidException e) {
+            System.out.println("----------------- SoapResponseInvalidException has been thrown:");
+            WsCoordinateUtils.print(e.getResponse());
+            e.printStackTrace();
         }
 
     }

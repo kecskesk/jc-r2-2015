@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameRunnerService {
 
-    public static final int MIN_INTERVAL = 150;
+    public static final int MIN_INTERVAL = 200;
 
     @Autowired
     private ApolloClientService apolloClient;

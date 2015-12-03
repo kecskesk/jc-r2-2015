@@ -61,7 +61,7 @@ public class GoToStrategy implements Strategy {
 
             long startTime = System.currentTimeMillis();
 
-            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
+            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME && remainingActionPoints > 0) {
                 // If we are at the destination, there is no need for further action.
                 if (new Coordinate(builderUnit.getPosition()).equals(new Coordinate(DESTINATION))) {
                     this.ready = true;
@@ -80,7 +80,7 @@ public class GoToStrategy implements Strategy {
                                 neighbourCellList,
                                 builderUnit.getPosition(),
                                 tempDirection);
-                        if (!shouldAvoid(moveTarget, remainingExplosives)) {
+                        if (!shouldAvoid(tempMoveTarget, remainingExplosives)) {
                             if (sortedDirections.indexOf(tempDirection) > 2) {
                                 blockedCells.add(new Coordinate(builderUnit.getPosition()));
                             }

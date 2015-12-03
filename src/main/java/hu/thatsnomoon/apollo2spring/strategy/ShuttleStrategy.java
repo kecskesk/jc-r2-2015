@@ -40,7 +40,7 @@ public class ShuttleStrategy implements Strategy {
 
             long startTime = System.currentTimeMillis();
 
-            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
+            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME && remainingActionPoints > 0) {
 
                 Coordinate shuttlePosition = new Coordinate(apolloClient.getSpaceShuttlePos().getCord()); // Flowchart - 1.
                 if (shuttlePosition.equals(new Coordinate(builderUnit.getPosition()))) {

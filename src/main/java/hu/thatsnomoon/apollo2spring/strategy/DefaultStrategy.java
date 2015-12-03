@@ -70,7 +70,7 @@ public class DefaultStrategy implements Strategy {
             this.ignoredCoordinates.clear();
             this.lastStructuredCoordinate = null;
 
-            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME) {
+            while (System.currentTimeMillis() - startTime < Strategy.ROUND_TIME && remainingActionPoints > 0) {
 
                 Coordinate shuttlePosition = new Coordinate(apolloClient.getSpaceShuttlePos().getCord());
 

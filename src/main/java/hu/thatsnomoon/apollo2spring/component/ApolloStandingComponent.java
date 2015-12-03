@@ -19,9 +19,11 @@ import eu.loxon.centralcontrol.StructureTunnelResponse;
 import eu.loxon.centralcontrol.WatchResponse;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
+import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.configuration.ApolloConfiguration;
 import hu.thatsnomoon.apollo2spring.model.BuilderUnit;
 import hu.thatsnomoon.apollo2spring.service.ApolloClientService;
+import hu.thatsnomoon.apollo2spring.strategy.CellStrategy;
 import hu.thatsnomoon.apollo2spring.strategy.DefaultStrategy;
 import hu.thatsnomoon.apollo2spring.strategy.ShuttleStrategy;
 import hu.thatsnomoon.apollo2spring.utils.WsCoordinateUtils;
@@ -89,14 +91,28 @@ public class ApolloStandingComponent {
     }
 
     public void initUnits(StartGameResponse response, ApolloClientService apolloClient) {
+
+        int i = 0;
+
         for (WsBuilderunit bu : response.getUnits()) {
+            WsCoordinate target = WsCoordinateUtils.directionToCoordinate(bu.getCord(), WsCoordinateUtils.UP_ORDER[i]);
             this.units.put(bu.getUnitid(),
                     new BuilderUnit(bu.getCord(), bu.getUnitid(),
                             Lists.newArrayList(
                                     new ShuttleStrategy(apolloClient),
                                     new DefaultStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[bu.getUnitid() % 4])
+
+//                                    new ShuttleStrategy(apolloClient),
+//                                    new GoToStrategy(apolloClient, target),
+//                                    new CellStrategy(apolloClient, WsCoordinateUtils.UP_ORDER[i], target)
                             )));
+            i++;
         }
+
+        this.units.get(0).setStrategies(Lists.newArrayList(
+                new ShuttleStrategy(apolloClient),
+                new CellStrategy(apolloClient, WsDirection.UP, this.units.get(0).getPosition())
+        ));
     }
 
     public void refreshStanding(ActionCostResponse response) {
