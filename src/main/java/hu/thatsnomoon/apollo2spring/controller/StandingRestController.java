@@ -4,11 +4,13 @@ import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import hu.thatsnomoon.apollo2spring.component.ApolloStandingComponent;
 import hu.thatsnomoon.apollo2spring.exception.HttpInvalidParamsException;
+import hu.thatsnomoon.apollo2spring.model.DefaultStrategyParams;
 import hu.thatsnomoon.apollo2spring.service.GameRunnerService;
 import hu.thatsnomoon.apollo2spring.service.StrategyChangerService;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,15 +61,14 @@ public class StandingRestController {
     /**
      * Rest API for changing the selected
      *
-     * @param id
-     * @param direction
+     * @param params
      */
     @RequestMapping(value = "/changeToDefaultStrategyOfRobot", method = RequestMethod.POST)
-    public void changeToDefaultStrategyOfBuilder(@RequestParam int id, @RequestParam String direction) {
+    public void changeToDefaultStrategyOfBuilder(@RequestBody DefaultStrategyParams params) {
         try {
-            strategyChangerService.changeToDefaultStrategyOfRobot(id, WsDirection.valueOf(direction));
+            strategyChangerService.changeToDefaultStrategyOfRobot(params.getId(), WsDirection.valueOf(params.getDirection()));
         } catch (IllegalArgumentException e) {
-            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + direction + "'.", e);
+            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + params.getDirection() + "'.", e);
             throw new HttpInvalidParamsException();
         }
     }
@@ -76,15 +77,14 @@ public class StandingRestController {
      * REST APi for adding default strategy to a robot's strategy queue. For example you change the robots strategy to GoTo strategy, and
      * then you call this method. Then if the robot arrives to the goto destination, it will start the default strategy.
      *
-     * @param id
-     * @param direction
+     * @param params
      */
     @RequestMapping(value = "/addDefaultStrategyToRobot", method = RequestMethod.POST)
-    public void addDefaultStrategyToRobot(@RequestParam int id, @RequestParam String direction) {
+    public void addDefaultStrategyOfBuilder(@RequestBody DefaultStrategyParams params) {
         try {
-            strategyChangerService.addDefaultStrategyToRobot(id, WsDirection.valueOf(direction));
+            strategyChangerService.addDefaultStrategyToRobot(params.getId(), WsDirection.valueOf(params.getDirection()));
         } catch (IllegalArgumentException e) {
-            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + direction + "'.", e);
+            Logger.getLogger(this.getClass()).error("Wrong direction name. Got: '" + params.getDirection() + "'.", e);
             throw new HttpInvalidParamsException();
         }
     }

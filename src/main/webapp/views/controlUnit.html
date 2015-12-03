@@ -1,17 +1,54 @@
 <br />
 
 <div>
-    <input name="selectedUnit" ng-model="selectedUnit" />
+    <div>Unit : <input name="selectedUnit" ng-model="selectedUnit" /></div>
+        
+    <div>
+        Strategy : 
+        <select name="selectedStrategy" ng-model="selectedStrategy">
+            <option value="DEF">Default strategy</option>
+            <option value="GOTO">Go to strategy</option>
+            <option value="CELL">Cell strategy</option>
+        </select>
+    </div>
+        
+    <div ng-show="selectedStrategy === 'GOTO' || selectedStrategy === 'CELL'">
+        <div>X : <input name="selectedX" ng-model="selectedX" /></div>
+        <div>Y : <input name="selectedY" ng-model="selectedY" /></div>
+    </div>
     
-    <select name="selectedDirection" ng-model="selectedDirection">
-        <option value="UP">UP</option>
-        <option value="DOWN">DOWN</option>
-        <option value="LEFT">LEFT</option>
-        <option value="RIGHT">RIGHT</option>
-    </select>
-    <div>{{selectedUnit}}</div>
-    <div>{{selectedDirection}}</div>
+    <div ng-show="selectedStrategy === 'DEF' || selectedStrategy === 'CELL'">
+        DIR : 
+        <select name="selectedDirection" ng-model="selectedDirection">
+            <option value="UP">UP</option>
+            <option value="DOWN">DOWN</option>
+            <option value="LEFT">LEFT</option>
+            <option value="RIGHT">RIGHT</option>
+        </select>
+    </div>
+    
+    <div>Unit : {{selectedUnit}}</div>
+    <div>Direction : {{selectedDirection}}</div>
+    <div>Strategy : {{selectedStrategy}}</div>
+    <div>X : {{selectedX}}</div>
+    <div>Y : {{selectedY}}</div>
        
+    <div>
+        <div ng-if="add">
+           ADD 
+           <button ng-click="changeMode()">SET TO CHANGE</button>
+        </div>
+    </div>
+    <div>
+        <div ng-if="!add">
+           CHANGE
+           <button ng-click="changeMode()">SET TO ADD</button>
+        </div>
+    </div>
+    
+    <div>
+        <button ng-click="setStrategy()">SEND</button> 
+    </div>
 </div>
 
 <br />

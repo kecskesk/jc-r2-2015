@@ -22,6 +22,40 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
         $http.post(url + "stopGame");
     };
 
+    var changeToDefaultStrategyOfBuilder = function (_id, _direction) {
+        var data = {
+            id : _id,
+            direction : _direction
+        }
+        $http.post(url + "changeToDefaultStrategyOfRobot", data);
+    };
+
+    var addDefaultStrategyOfBuilder = function (_id, _direction) {
+        var data = {
+            id : _id,
+            direction : _direction
+        }
+        $http.post(url + "addDefaultStrategyToRobot", data);
+    };
+
+    var changeToGoToStrategyOfBuilder = function (_id, _x, _y) {
+        var data = {
+            id : _id,
+            x : _x,
+            y : _y
+        }
+        $http.post(url + "changeToGoToStrategyOfRobot", data);
+    };
+
+    var addGoToStrategyOfBuilder = function (_id, _x, _y) {
+        var data = {
+            id : _id,
+            x : _x,
+            y : _y
+        }
+        $http.post(url + "addGoToStrategyToRobot", data);
+    };
+
     var startBinding = function () {
         bindingPromise = $interval(bindLatestStanding, 500);
     };
@@ -39,6 +73,10 @@ app.factory('controlUnitService', function ($http, $interval, applicationPropert
         startBinding: startBinding,
         stopBinding: stopBinding,
         startGame: startGame,
-        stopGame: stopGame
+        stopGame: stopGame,
+        changeToDefaultStrategyOfBuilder: changeToDefaultStrategyOfBuilder,
+        addDefaultStrategyOfBuilder: addDefaultStrategyOfBuilder,
+        changeToGoToStrategyOfBuilder: changeToGoToStrategyOfBuilder,
+        addGoToStrategyOfBuilder: addGoToStrategyOfBuilder 
     };
 });
