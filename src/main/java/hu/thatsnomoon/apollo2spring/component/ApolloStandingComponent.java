@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jboss.logging.Logger;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,22 +46,25 @@ public class ApolloStandingComponent {
     private static final String SHUTTLE_EXIT_NAME = "shuttleExitResponse";
     private static final String UNITS_NAME = "units";
 
-    private final List<List<Scouting>> map;
+    private final Map<Integer, Map<Integer, Scouting>> map;
     private final Map<String, Object> standing;
     private final Map<Integer, BuilderUnit> units;
 
     public ApolloStandingComponent() {
-        this.map = Collections.synchronizedList(new ArrayList<List<Scouting>>());
+        this.map = Collections.synchronizedMap(new HashMap<Integer, Map<Integer, Scouting>>());
         this.standing = Collections.synchronizedMap(new HashMap<>());
         this.units = Collections.synchronizedMap(new HashMap<Integer, BuilderUnit>());
         this.standing.put(COMMON_RESP_NAME, null);
-        this.standing.put(MAP_NAME, Collections.unmodifiableList(map));
+        this.standing.put(MAP_NAME, Collections.unmodifiableMap(map));
         this.standing.put(UNITS_NAME, Collections.unmodifiableMap(units));
     }
 
     private void refreshMap(Scouting scouting) {
-
-        this.map.get(scouting.getCord().getX()).set(scouting.getCord().getY(), scouting);
+        try {
+            this.map.get(scouting.getCord().getX()).put(scouting.getCord().getY(), scouting);
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass()).error(e);
+        }
     }
 
     private Scouting newScouting(WsCoordinate coord, ObjectType type, String team) {
@@ -77,9 +81,9 @@ public class ApolloStandingComponent {
         if (response.getResult().getType() == ResultType.DONE) {
 
             for (int x = 0; x < response.getSize().getX(); x++) {
-                map.add(Collections.synchronizedList(new ArrayList<Scouting>()));
+                map.put(x, Collections.synchronizedMap(new HashMap<Integer, Scouting>()));
                 for (int y = 0; y < response.getSize().getY(); y++) {
-                    map.get(x).set(y, new Scouting());
+                    map.get(x).put(y, new Scouting());
                 }
             }
         }
