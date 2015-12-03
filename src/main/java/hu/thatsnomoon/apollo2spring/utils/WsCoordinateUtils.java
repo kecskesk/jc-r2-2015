@@ -26,20 +26,20 @@ public class WsCoordinateUtils {
 
     static {
         WsCoordinate up = new WsCoordinate();
-        up.setX(1);
-        up.setY(0);
+        up.setY(1);
+        up.setX(0);
 
         WsCoordinate down = new WsCoordinate();
-        down.setX(-1);
-        down.setY(0);
+        down.setY(-1);
+        down.setX(0);
 
         WsCoordinate right = new WsCoordinate();
-        right.setX(0);
-        right.setY(1);
+        right.setY(0);
+        right.setX(1);
 
         WsCoordinate left = new WsCoordinate();
-        left.setX(0);
-        left.setY(-1);
+        left.setY(0);
+        left.setX(-1);
 
         directionCoordinate = new HashMap<>();
         directionCoordinate.put(WsDirection.UP, up);
@@ -183,7 +183,7 @@ public class WsCoordinateUtils {
                 }
             }
         }
-        return null;
+        throw new RuntimeException("Tried to step on NOT neighbouring cell.");
     }
 
     /**
@@ -198,35 +198,6 @@ public class WsCoordinateUtils {
         coordinate.setX(from.getX() + directionCoordinate.get(direction).getX());
         coordinate.setY(from.getY() + directionCoordinate.get(direction).getY());
         return coordinate;
-    }
-
-    /**
-     * Calculates the neighbor cell's coordinates in a given direction
-     *
-     * @param pos
-     * @param dir
-     * @return
-     */
-    public static WsCoordinate neighbourCellCoordinate(WsCoordinate pos, WsDirection dir) {
-        WsCoordinate neighbour = new WsCoordinate();
-
-        neighbour.setX(pos.getX());
-        neighbour.setY(pos.getY());
-
-        if (dir == WsDirection.UP) {
-            neighbour.setY(pos.getY() + 1);
-        }
-        if (dir == WsDirection.DOWN) {
-            neighbour.setY(pos.getY() - 1);
-        }
-        if (dir == WsDirection.RIGHT) {
-            neighbour.setX(pos.getX() + 1);
-        }
-        if (dir == WsDirection.LEFT) {
-            neighbour.setX(pos.getX() - 1);
-        }
-
-        return neighbour;
     }
 
     public static Scouting getDirectionScoutingFromWatch(List<Scouting> scoutings, WsCoordinate pos, WsDirection dir) {

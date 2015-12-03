@@ -6,6 +6,7 @@ import eu.loxon.centralcontrol.ObjectType;
 import eu.loxon.centralcontrol.Scouting;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import hu.thatsnomoon.apollo2spring.model.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,65 +58,127 @@ public class WsCoordinateUtilsTest {
     /**
      * Test of isSameCells method, of class WsCoordinateUtils.
      */
-    @Ignore
     @org.junit.Test
     public void testIsSameCells() {
-        System.out.println("isSameCells");
-        WsCoordinate first = null;
-        WsCoordinate second = null;
-        boolean expResult = false;
-        boolean result = WsCoordinateUtils.isSameCells(first, second);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WsCoordinate first = new WsCoordinate();
+        first.setX(1);
+        first.setY(1);
+        WsCoordinate second = new WsCoordinate();
+        second.setX(1);
+        second.setY(-1);
+        assertTrue(!WsCoordinateUtils.isSameCells(first, second));
+        
+        
+        WsCoordinate third = new WsCoordinate();
+        third.setX(1);
+        third.setY(1);
+        assertTrue(WsCoordinateUtils.isSameCells(first, third));
     }
 
     /**
      * Test of isNeighborCells method, of class WsCoordinateUtils.
      */
-    @Ignore
     @org.junit.Test
     public void testIsNeighborCells() {
-        System.out.println("isNeighborCells");
-        WsCoordinate from = null;
-        WsCoordinate to = null;
-        boolean expResult = false;
-        boolean result = WsCoordinateUtils.isNeighborCells(from, to);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WsCoordinate first = new WsCoordinate();
+        first.setX(1);
+        first.setY(1);
+        WsCoordinate second = new WsCoordinate();
+        second.setX(1);
+        second.setY(1);
+        assertTrue(!WsCoordinateUtils.isNeighborCells(first, second));
+        
+        WsCoordinate from = new WsCoordinate();
+        from.setX(1);
+        from.setY(1);
+        WsCoordinate to1 = new WsCoordinate();
+        to1.setX(0);
+        to1.setY(1);
+        assertTrue(WsCoordinateUtils.isNeighborCells(from, to1));
+        
+        WsCoordinate to2 = new WsCoordinate();
+        to2.setX(2);
+        to2.setY(1);
+        assertTrue(WsCoordinateUtils.isNeighborCells(from, to2));
+        
+        WsCoordinate to3 = new WsCoordinate();
+        to3.setX(1);
+        to3.setY(0);
+        assertTrue(WsCoordinateUtils.isNeighborCells(from, to3));
+        
+        WsCoordinate to4 = new WsCoordinate();
+        to4.setX(1);
+        to4.setY(2);
+        assertTrue(WsCoordinateUtils.isNeighborCells(from, to4));
     }
 
     /**
      * Test of moveDirection method, of class WsCoordinateUtils.
      */
-    @Ignore
-    @org.junit.Test
+    @org.junit.Test(expected = RuntimeException.class)
     public void testMoveDirection() {
-        System.out.println("moveDirection");
-        WsCoordinate from = null;
-        WsCoordinate to = null;
-        WsDirection expResult = null;
-        WsDirection result = WsCoordinateUtils.moveDirection(from, to);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        WsCoordinate from = new WsCoordinate();
+        from.setX(1);
+        from.setY(1);
+        WsCoordinate to1 = new WsCoordinate();
+        to1.setX(0);
+        to1.setY(1);
+        assertTrue(WsDirection.LEFT.equals(WsCoordinateUtils.moveDirection(from, to1)));
+        
+        WsCoordinate to2 = new WsCoordinate();
+        to2.setX(2);
+        to2.setY(1);
+        assertTrue(WsDirection.RIGHT.equals(WsCoordinateUtils.moveDirection(from, to2)));
+        
+        WsCoordinate to3 = new WsCoordinate();
+        to3.setX(1);
+        to3.setY(0);
+        assertTrue(WsDirection.DOWN.equals(WsCoordinateUtils.moveDirection(from, to3)));
+        
+        WsCoordinate to4 = new WsCoordinate();
+        to4.setX(1);
+        to4.setY(2);
+        assertTrue(WsDirection.UP.equals(WsCoordinateUtils.moveDirection(from, to4)));
+                
+        WsCoordinate first = new WsCoordinate();
+        first.setX(1);
+        first.setY(1);
+        WsCoordinate second = new WsCoordinate();
+        second.setX(1);
+        second.setY(1);
+        WsCoordinateUtils.moveDirection(first, second);
     }
 
     /**
      * Test of neighbourCellCoordinate method, of class WsCoordinateUtils.
      */
-    @Ignore
     @org.junit.Test
     public void testNeighbourCellCoordinate() {
-        System.out.println("neighbourCellCoordinate");
-        WsCoordinate pos = null;
-        WsDirection dir = null;
-        WsCoordinate expResult = null;
-        WsCoordinate result = WsCoordinateUtils.neighbourCellCoordinate(pos, dir);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WsCoordinate from = new WsCoordinate();
+        from.setX(1);
+        from.setY(1);
+        
+        
+        WsCoordinate to1 = new WsCoordinate();
+        to1.setX(0);
+        to1.setY(1);        
+        assertEquals(new Coordinate(WsCoordinateUtils.directionToCoordinate(from, WsDirection.LEFT)),new Coordinate(to1));
+        
+        WsCoordinate to2 = new WsCoordinate();
+        to2.setX(2);
+        to2.setY(1);
+        assertEquals(new Coordinate(WsCoordinateUtils.directionToCoordinate(from, WsDirection.RIGHT)),new Coordinate(to2));
+        
+        WsCoordinate to3 = new WsCoordinate();
+        to3.setX(1);
+        to3.setY(0);
+        assertEquals(new Coordinate(WsCoordinateUtils.directionToCoordinate(from, WsDirection.DOWN)),new Coordinate(to3));
+        
+        WsCoordinate to4 = new WsCoordinate();
+        to4.setX(1);
+        to4.setY(2);
+        assertEquals(new Coordinate(WsCoordinateUtils.directionToCoordinate(from, WsDirection.UP)),new Coordinate(to4));
     }
 
     /**
@@ -141,14 +204,14 @@ public class WsCoordinateUtilsTest {
         s2.setCord(p2);
 
         Scouting s3 = new Scouting();
-        s3.setObject(ObjectType.ROCK);
+        s3.setObject(ObjectType.TUNNEL);
         WsCoordinate p3 = new WsCoordinate();
         p3.setX(6);
         p3.setY(2);
         s3.setCord(p3);
 
         Scouting s4 = new Scouting();
-        s4.setObject(ObjectType.ROCK);
+        s4.setObject(ObjectType.OBSIDIAN);
         WsCoordinate p4 = new WsCoordinate();
         p4.setX(5);
         p4.setY(1);
@@ -159,15 +222,23 @@ public class WsCoordinateUtilsTest {
         scoutings.add(s3);
         scoutings.add(s4);
 
+        Scouting result;
+        
         WsCoordinate pos = new WsCoordinate();
         pos.setX(5);
         pos.setY(2);
-        WsDirection dir = WsDirection.UP;
 
-        Scouting result = WsCoordinateUtils.getDirectionScoutingFromWatch(scoutings, pos, dir);
+        result = WsCoordinateUtils.getDirectionScoutingFromWatch(scoutings, pos, WsDirection.UP);
         assertEquals(ObjectType.GRANITE, result.getObject());
-        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        
+        result = WsCoordinateUtils.getDirectionScoutingFromWatch(scoutings, pos, WsDirection.DOWN);
+        assertEquals(ObjectType.OBSIDIAN, result.getObject());
+        
+        result = WsCoordinateUtils.getDirectionScoutingFromWatch(scoutings, pos, WsDirection.LEFT);
+        assertEquals(ObjectType.ROCK, result.getObject());
+        
+        result = WsCoordinateUtils.getDirectionScoutingFromWatch(scoutings, pos, WsDirection.RIGHT);
+        assertEquals(ObjectType.TUNNEL, result.getObject());
     }
 
 }
