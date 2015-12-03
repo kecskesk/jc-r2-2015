@@ -10,4 +10,7 @@ app.controller('ControlUnitCtrl', function ($scope, controlUnitService) {
     $scope.stopGame = controlUnitService.stopGame;
     $scope.startBinding = controlUnitService.startBinding;
     $scope.stopBinding = controlUnitService.stopBinding;
+    
+    $scope.selectedDirection = "";
+    $scope.selectedUnit = 0;
 });
